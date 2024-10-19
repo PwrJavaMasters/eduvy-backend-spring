@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${USER_DB_PORT_LOCAL:5432}/${USER_DB_NAME_LOCAL:authorization_db_dev}
+    username: ${USER_DB_USER_LOCAL:auth_user_dev}
+    password: ${USER_DB_PASSWORD_LOCAL:auth_pass_dev}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+

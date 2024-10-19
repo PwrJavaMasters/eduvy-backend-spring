@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: tutoring-service
+
+server:
+  port: ${TUTORING_PORT:8083}

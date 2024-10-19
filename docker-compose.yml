@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  gateway:
+    image: ${GATEWAY_IMAGE}
+    build: ./gateway
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    depends_on:
+      - authorization-service
+      - user-service
+      - tutoring-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+      - AUTHORIZATION_PORT=${AUTHORIZATION_PORT}
+      - USER_PORT=${USER_PORT}
+      - TUTORING_PORT=${TUTORING_PORT}
+    networks:
+      - app-network
+
+  authorization-service:
+    image: ${AUTHORIZATION_IMAGE}
+    build: ./authorization-service
+    ports:
+      - "${AUTHORIZATION_PORT}:${AUTHORIZATION_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+      - AUTHORIZATION_PORT=${AUTHORIZATION_PORT}
+      - AUTH_DB_NAME=${AUTH_DB_NAME}
+      - AUTH_DB_USER=${AUTH_DB_USER}
+      - AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}
+    depends_on:
+      - auth-db
+    networks:
+      - app-network
+
+  user-service:
+    image: ${USER_IMAGE}
+    build: ./user-service
+    ports:
+      - "${USER_PORT}:${USER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+      - USER_PORT=${USER_PORT}
+      - USER_DB_NAME=${USER_DB_NAME}
+      - USER_DB_USER=${USER_DB_USER}
+      - USER_DB_PASSWORD=${USER_DB_PASSWORD}
+    depends_on:
+      - user-db
+    networks:
+      - app-network
+
+  tutoring-service:
+    image: ${TUTORING_IMAGE}
+    build: ./tutoring-service
+    ports:
+      - "${TUTORING_PORT}:${TUTORING_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+      - TUTORING_PORT=${TUTORING_PORT}
+      - TUTORING_DB_NAME=${TUTORING_DB_NAME}
+      - TUTORING_DB_USER=${TUTORING_DB_USER}
+      - TUTORING_DB_PASSWORD=${TUTORING_DB_PASSWORD}
+    depends_on:
+      - tutoring-db
+    networks:
+      - app-network
+
+  auth-db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_NAME}
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+
+  user-db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${USER_DB_USER}
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+      POSTGRES_DB: ${USER_DB_NAME}
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - app-network
+
+  tutoring-db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${TUTORING_DB_USER}
+      POSTGRES_PASSWORD: ${TUTORING_DB_PASSWORD}
+      POSTGRES_DB: ${TUTORING_DB_NAME}
+    volumes:
+      - tutoring_db_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  auth_db_data:
+  user_db_data:
+  tutoring_db_data:

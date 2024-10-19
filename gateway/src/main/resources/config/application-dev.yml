@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: authorization-service
+          uri: http://authorization-service:${AUTHORIZATION_PORT}
+          predicates:
+            - Path=/auth/**
+        - id: user-service
+          uri: http://user-service:${USER_PORT}
+          predicates:
+            - Path=/users/**
+        - id: tutoring-service
+          uri: http://tutoring-service:${TUTORING_PORT}
+          predicates:
+            - Path=/tutoring/**

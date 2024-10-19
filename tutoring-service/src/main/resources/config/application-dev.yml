@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://tutoring-db:5432/${TUTORING_DB_NAME}
+    username: ${TUTORING_DB_USER}
+    password: ${TUTORING_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
