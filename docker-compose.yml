@@ -3,9 +3,7 @@ version: '3.8'
 services:
   gateway:
     image: ${GATEWAY_IMAGE}
-    build:
-      context: ./
-      dockerfile: gateway/Dockerfile
+    build: ./gateway
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     depends_on:
