@@ -5,3 +5,8 @@ spring:
 server:
 #  port: ${GATEWAY_PORT:8081}
   port: 8081
+
+logging:
+  level:
+    root: DEBUG
+    io.netty: DEBUG
