@@ -14,3 +14,6 @@ spring:
           uri: http://localhost:${TUTORING_PORT}
           predicates:
             - Path=/tutoring/**
+
+server:
+  port: 8081
