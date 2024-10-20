@@ -3,4 +3,4 @@ spring:
     name: gateway
 
 server:
-  port: ${GATEWAY_PORT:8080}
+  port: ${GATEWAY_PORT:8081}
