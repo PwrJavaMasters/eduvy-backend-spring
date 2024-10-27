@@ -16,49 +16,22 @@
     </properties>
 
     <dependencies>
-        <!-- Spring WebFlux for reactive programming -->
+        <!-- Spring Boot and WebFlux -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-        <!-- Spring Cloud Gateway for the gateway functionality -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-
-        <!-- Spring Security for reactive applications -->
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- OAuth2 Resource Server for handling JWT authentication -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-        </dependency>
+        <!-- OAuth2 Client -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-api</artifactId>
-            <version>19.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-httpclient</artifactId>
-            <version>8.2.5</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.okta.spring</groupId>
-            <artifactId>okta-spring-sdk</artifactId>
-            <version>2.1.4</version>
         </dependency>
 
         <!-- For password encoding -->
@@ -67,17 +40,32 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
-        <!-- Optional: Spring Boot Actuator for monitoring and health checks -->
+        <!-- Okta SDK -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-api</artifactId>
+            <version>19.0.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-impl</artifactId>
+            <version>19.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.okta.sdk</groupId>
+            <artifactId>okta-sdk-httpclient</artifactId>
+            <version>8.2.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
 
