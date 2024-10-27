@@ -18,6 +18,7 @@ import java.util.Collections;
 @SpringBootApplication
 @EnableWebFluxSecurity
 public class GatewayApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
     }
@@ -39,7 +40,35 @@ public class GatewayApplication {
     public WebFilter corsWebFilter() {
         return new CorsWebFilter(corsConfigurationSource());
     }
-//
+
+
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        http
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/auth/**").permitAll()
+                        .anyExchange().authenticated()
+                )
+                .authenticationManager(authenticationManager)
+                .securityContextRepository(securityContextRepository)
+                .csrf().disable()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource));
+        return http.build();
+    }
+
+}
+
+// filtr akceptujący wszystko
+//    @Bean
+//    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+//        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+//                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll())
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .build();
+//    }
+
+// STARY FILTR
 //    @Bean
 //    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 //        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
@@ -50,12 +79,3 @@ public class GatewayApplication {
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 //                .build();
 //    }
-
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .build();
-    }
-}
