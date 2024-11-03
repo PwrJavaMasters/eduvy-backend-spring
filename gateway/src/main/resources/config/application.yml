@@ -2,6 +2,11 @@ spring:
   application:
     name: gateway
 
+
+auth0:
+  audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
+  issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
+
 server:
   port: ${GATEWAY_PORT:8081}
 
