@@ -4,8 +4,9 @@ package com.eduvy.user.service;
 import com.eduvy.user.controller.dto.FillUserDetailsRequest;
 import com.eduvy.user.controller.dto.UserDetailsCheckResponse;
 import com.eduvy.user.controller.dto.UserDetailsCheckRequest;
-import com.eduvy.user.model.User;
-import com.eduvy.user.repository.UserRepository;
+import com.eduvy.user.controller.dto.UserDetailsResponse;
+import com.eduvy.user.model.UserDetails;
+import com.eduvy.user.repository.UserDetailsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +16,48 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
+    UserDetailsRepository userDetailsRepository;
 
-    public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled(UserDetailsCheckRequest userDetailsCheckRequest) {
-        if (userDetailsCheckRequest == null || userDetailsCheckRequest.email == null) {
+    public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled(String email) {
+        if (email == null) {
             return ResponseEntity.status(422).build();
         }
 
-        User user = userRepository.findByEmail(userDetailsCheckRequest.email);
-        if (user == null) return ResponseEntity.status(404).build();
+        UserDetails userDetails = userDetailsRepository.findByEmail(email);
+        if (userDetails == null) return ResponseEntity.status(404).build();
 
-        boolean userDetailsFilled = user.getEmail() != null &&
-                user.getFirstName() != null &&
-                user.getLastName() != null &&
-                user.getDateOfBirth() != null &&
-                user.getIsTeacher() != null &&
-                user.getIsStudent() != null &&
-                user.getIsNewsletter() != null;
+        boolean userDetailsFilled = userDetails.getEmail() != null &&
+                userDetails.getFirstName() != null &&
+                userDetails.getLastName() != null &&
+                userDetails.getDateOfBirth() != null &&
+                userDetails.getIsTeacher() != null &&
+                userDetails.getIsStudent() != null &&
+                userDetails.getIsNewsletter() != null;
 
         return ResponseEntity.ok(new UserDetailsCheckResponse(userDetailsFilled));
     }
 
-    public ResponseEntity<Void> getUserDetails() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserDetailsResponse> getUserDetails(String email) {
+        if (email == null) {
+            return ResponseEntity.status(422).build();
+        }
+
+        System.out.println("Looking for user details for " + email);
+        UserDetails userDetails = userDetailsRepository.findByEmail(email);
+        if (userDetails == null) return ResponseEntity.status(404).build();
+
+        UserDetailsResponse userDetailsResponse = new UserDetailsResponse(
+                userDetails.getEmail(),
+                userDetails.getFirstName(),
+                userDetails.getLastName(),
+                userDetails.getDateOfBirth(),
+                userDetails.getIsAdmin(),
+                userDetails.getIsTeacher(),
+                userDetails.getIsStudent(),
+                userDetails.getIsNewsletter()
+        );
+
+        return ResponseEntity.ok().body(userDetailsResponse);
     }
 
     @Transactional
@@ -46,8 +66,11 @@ public class UserService {
             return ResponseEntity.status(422).build();
         }
 
-        User user = userRepository.findByEmail(fillUserDetailsRequest.email);
-        if (user == null) return ResponseEntity.status(404).build();
+        UserDetails userDetails = userDetailsRepository.findByEmail(fillUserDetailsRequest.email);
+        if (userDetails == null) {
+            userDetails = new UserDetails();
+            userDetails.setEmail(fillUserDetailsRequest.email);
+        }
 
         if (fillUserDetailsRequest.firstName == null ||
                 fillUserDetailsRequest.lastName == null ||
@@ -60,7 +83,8 @@ public class UserService {
             return ResponseEntity.status(422).build();
         }
 
-        user.setUserDetails(fillUserDetailsRequest);
+        userDetails.setUserDetails(fillUserDetailsRequest);
+        userDetailsRepository.save(userDetails);
 
         return ResponseEntity.ok().build();
     }

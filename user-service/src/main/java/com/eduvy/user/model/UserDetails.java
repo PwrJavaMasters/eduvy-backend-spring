@@ -10,14 +10,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,7 @@ public class User {
     private Boolean isDeleted;
 
     public void setUserDetails(FillUserDetailsRequest fillUserDetailsRequest) {
+        email = fillUserDetailsRequest.email;
         firstName = fillUserDetailsRequest.firstName;
         lastName = fillUserDetailsRequest.lastName;
         dateOfBirth = fillUserDetailsRequest.dateOfBirth; // todo check format
