@@ -16,58 +16,43 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot and WebFlux -->
+        <!-- Spring WebFlux for reactive programming -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
-        <!-- Spring Security -->
+        <!-- Spring Cloud Gateway for the gateway functionality -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>auth0</artifactId>
+        </dependency>
+        <!-- Spring Security for reactive applications -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- OAuth2 Client -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- For password encoding -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-        </dependency>
-
-        <!-- Okta SDK -->
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-api</artifactId>
-            <version>19.0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-impl</artifactId>
-            <version>19.0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.okta.sdk</groupId>
-            <artifactId>okta-sdk-httpclient</artifactId>
-            <version>8.2.5</version>
-            <scope>runtime</scope>
-        </dependency>
-
-
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>jwks-rsa</artifactId>
+        </dependency>
+
 
     </dependencies>
 

@@ -1,20 +1,16 @@
 package com.eduvy.gateway;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.server.WebFilter;
-
+import org.springframework.web.cors.CorsConfiguration;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -25,6 +21,9 @@ public class GatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
     }
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -40,56 +39,16 @@ public class GatewayApplication {
     }
 
     @Bean
-    public WebFilter corsWebFilter() {
-        return new CorsWebFilter(corsConfigurationSource());
-    }
-
-
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity http,
-            CustomAuthenticationManager authenticationManager,
-            SecurityContextRepository securityContextRepository,
-            CorsConfigurationSource corsConfigurationSource) {
-
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-resources/**", "/swagger-ui.html/**","/register").permitAll()
                         .anyExchange().authenticated()
                 )
-                .authenticationManager(authenticationManager)
-                .securityContextRepository(securityContextRepository)
-                .csrf().disable()
-                .cors(cors -> cors.configurationSource(corsConfigurationSource));
+                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         return http.build();
     }
-
-
-//    nie wiem czy to potrzebne
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }
-
-// filtr akceptujący wszystko
-//    @Bean
-//    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-//        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll())
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .build();
-//    }
-
-// STARY FILTR
-//    @Bean
-//    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-//        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//                .authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-resources/**", "/register", "/login", "/swagger-ui.html/**")
-//                        .permitAll()
-//                        .anyExchange().authenticated())
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .build();
-//    }
