@@ -1,7 +1,7 @@
 package com.eduvy.user.model;
 
 
-import com.eduvy.user.controller.dto.FillUserDetailsRequest;
+import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

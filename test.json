@@ -1,0 +1,40 @@
+{
+  "id_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxZTDhRbXdRbkN5TFp0eXdsemJIRCJ9.eyJuaWNrbmFtZSI6InRlc3R1c2VyIiwibmFtZSI6InRlc3R1c2VyQG1haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyL2MwZGJmMTFmNzE2MTJhMTY1ZDhjZDYxNGIxMDdmMWJlP3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGdGUucG5nIiwidXBkYXRlZF9hdCI6IjIwMjQtMTEtMDNUMTc6Mzc6MjguMzMwWiIsImVtYWlsIjoidGVzdHVzZXJAbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LWdrbmlkazJxMWZvZTR0eGUudXMuYXV0aDAuY29tLyIsImF1ZCI6IkJoNnZ2U2JRbFd2T0d6aUE2Y3VLcXBaZFdJc1UzTEJ0IiwiaWF0IjoxNzMwNjU1NDY5LCJleHAiOjE3MzA2OTE0NjksInN1YiI6ImF1dGgwfDY3MjdhOWM2ZDMxMWRiNjc1MWVjNTg5YiIsInNpZCI6Im0tOC1tTlZfWUNNQ0NFY2tZMWZDejhpZVZBY005UHFwIiwibm9uY2UiOiJZamM0UlhoMVREWXhTVWN5TVdOTlF6WnpMa0p6UmpaT1R6aDVWVkppZDIxV1pYWmFlV3RKTm1oQlVRPT0ifQ.e7qqo9gncXHy9pbaGuR-DQ1u8c3t0xsOK4kFBeldtNqao0DU81esBxvTzS1m87DJ88Fq68ddo8WUvXdbxPK7pRvgiKubEeWg4dxanV2RICLnponNNxtJemu7ZkxHU4BLpMr0ShhsmdpLZYW26URbLQHpX82uSIZVBMs9qZ9kuAie5atzmf8wgMmSB0ffc6KQOlDCcaJs1R-GQvcETkgfgwWDpr5KmQmi06HayUOiWjPQRq5vw1xUTLJfhUkA4ZG0wXQ83fZICc2P40O7_sjlfQTx1XjUMs3MqZqpZ54n-IiA8NWDHsBcJbSDYwiXHJQIKKQgTdIYhwI0IGWV00VOKg",
+  "decodedToken": {
+    "encoded": {
+      "header": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxZTDhRbXdRbkN5TFp0eXdsemJIRCJ9",
+      "payload": "eyJuaWNrbmFtZSI6InRlc3R1c2VyIiwibmFtZSI6InRlc3R1c2VyQG1haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyL2MwZGJmMTFmNzE2MTJhMTY1ZDhjZDYxNGIxMDdmMWJlP3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGdGUucG5nIiwidXBkYXRlZF9hdCI6IjIwMjQtMTEtMDNUMTc6Mzc6MjguMzMwWiIsImVtYWlsIjoidGVzdHVzZXJAbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LWdrbmlkazJxMWZvZTR0eGUudXMuYXV0aDAuY29tLyIsImF1ZCI6IkJoNnZ2U2JRbFd2T0d6aUE2Y3VLcXBaZFdJc1UzTEJ0IiwiaWF0IjoxNzMwNjU1NDY5LCJleHAiOjE3MzA2OTE0NjksInN1YiI6ImF1dGgwfDY3MjdhOWM2ZDMxMWRiNjc1MWVjNTg5YiIsInNpZCI6Im0tOC1tTlZfWUNNQ0NFY2tZMWZDejhpZVZBY005UHFwIiwibm9uY2UiOiJZamM0UlhoMVREWXhTVWN5TVdOTlF6WnpMa0p6UmpaT1R6aDVWVkppZDIxV1pYWmFlV3RKTm1oQlVRPT0ifQ",
+      "signature": "e7qqo9gncXHy9pbaGuR-DQ1u8c3t0xsOK4kFBeldtNqao0DU81esBxvTzS1m87DJ88Fq68ddo8WUvXdbxPK7pRvgiKubEeWg4dxanV2RICLnponNNxtJemu7ZkxHU4BLpMr0ShhsmdpLZYW26URbLQHpX82uSIZVBMs9qZ9kuAie5atzmf8wgMmSB0ffc6KQOlDCcaJs1R-GQvcETkgfgwWDpr5KmQmi06HayUOiWjPQRq5vw1xUTLJfhUkA4ZG0wXQ83fZICc2P40O7_sjlfQTx1XjUMs3MqZqpZ54n-IiA8NWDHsBcJbSDYwiXHJQIKKQgTdIYhwI0IGWV00VOKg"
+    },
+    "header": {
+      "alg": "RS256",
+      "typ": "JWT",
+      "kid": "LYL8QmwQnCyLZtywlzbHD"
+    },
+    "claims": {
+      "__raw": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxZTDhRbXdRbkN5TFp0eXdsemJIRCJ9.eyJuaWNrbmFtZSI6InRlc3R1c2VyIiwibmFtZSI6InRlc3R1c2VyQG1haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyL2MwZGJmMTFmNzE2MTJhMTY1ZDhjZDYxNGIxMDdmMWJlP3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGdGUucG5nIiwidXBkYXRlZF9hdCI6IjIwMjQtMTEtMDNUMTc6Mzc6MjguMzMwWiIsImVtYWlsIjoidGVzdHVzZXJAbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LWdrbmlkazJxMWZvZTR0eGUudXMuYXV0aDAuY29tLyIsImF1ZCI6IkJoNnZ2U2JRbFd2T0d6aUE2Y3VLcXBaZFdJc1UzTEJ0IiwiaWF0IjoxNzMwNjU1NDY5LCJleHAiOjE3MzA2OTE0NjksInN1YiI6ImF1dGgwfDY3MjdhOWM2ZDMxMWRiNjc1MWVjNTg5YiIsInNpZCI6Im0tOC1tTlZfWUNNQ0NFY2tZMWZDejhpZVZBY005UHFwIiwibm9uY2UiOiJZamM0UlhoMVREWXhTVWN5TVdOTlF6WnpMa0p6UmpaT1R6aDVWVkppZDIxV1pYWmFlV3RKTm1oQlVRPT0ifQ.e7qqo9gncXHy9pbaGuR-DQ1u8c3t0xsOK4kFBeldtNqao0DU81esBxvTzS1m87DJ88Fq68ddo8WUvXdbxPK7pRvgiKubEeWg4dxanV2RICLnponNNxtJemu7ZkxHU4BLpMr0ShhsmdpLZYW26URbLQHpX82uSIZVBMs9qZ9kuAie5atzmf8wgMmSB0ffc6KQOlDCcaJs1R-GQvcETkgfgwWDpr5KmQmi06HayUOiWjPQRq5vw1xUTLJfhUkA4ZG0wXQ83fZICc2P40O7_sjlfQTx1XjUMs3MqZqpZ54n-IiA8NWDHsBcJbSDYwiXHJQIKKQgTdIYhwI0IGWV00VOKg",
+      "nickname": "testuser",
+      "name": "testuser@mail.com",
+      "picture": "https://s.gravatar.com/avatar/c0dbf11f71612a165d8cd614b107f1be?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fte.png",
+      "updated_at": "2024-11-03T17:37:28.330Z",
+      "email": "testuser@mail.com",
+      "email_verified": false,
+      "iss": "https://dev-gknidk2q1foe4txe.us.auth0.com/",
+      "aud": "Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt",
+      "iat": 1730655469,
+      "exp": 1730691469,
+      "sub": "auth0|6727a9c6d311db6751ec589b",
+      "sid": "m-8-mNV_YCMCCEckY1fCz8ieVAcM9Pqp",
+      "nonce": "Yjc4RXh1TDYxSUcyMWNNQzZzLkJzRjZOTzh5VVJid21WZXZaeWtJNmhBUQ=="
+    },
+    "user": {
+      "nickname": "testuser",
+      "name": "testuser@mail.com",
+      "picture": "https://s.gravatar.com/avatar/c0dbf11f71612a165d8cd614b107f1be?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fte.png",
+      "updated_at": "2024-11-03T17:37:28.330Z",
+      "email": "testuser@mail.com",
+      "email_verified": false,
+      "sub": "auth0|6727a9c6d311db6751ec589b"
+    }
+  }
+}

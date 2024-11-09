@@ -1,8 +1,5 @@
-package com.eduvy.user.controller.dto;
+package com.eduvy.user.dto.user.details;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

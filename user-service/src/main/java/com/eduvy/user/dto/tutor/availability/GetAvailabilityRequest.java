@@ -1,15 +1,18 @@
-package com.eduvy.user.controller.dto;
-
+package com.eduvy.user.dto.tutor.availability;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetailsCheckResponse {
-    private boolean detailsFilled;
+public class GetAvailabilityRequest {
+
+    private LocalDate day;
 }

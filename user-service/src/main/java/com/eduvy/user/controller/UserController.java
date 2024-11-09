@@ -1,10 +1,9 @@
 package com.eduvy.user.controller;
 
-import com.eduvy.user.controller.dto.FillUserDetailsRequest;
-import com.eduvy.user.controller.dto.UserDetailsCheckRequest;
-import com.eduvy.user.controller.dto.UserDetailsCheckResponse;
-import com.eduvy.user.controller.dto.UserDetailsResponse;
-import com.eduvy.user.service.UserService;
+import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
+import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
+import com.eduvy.user.dto.user.details.UserDetailsResponse;
+import com.eduvy.user.service.impl.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 

@@ -1,16 +1,17 @@
-package com.eduvy.user.controller.dto;
-
+package com.eduvy.user.dto.tutor.get;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetailsRequest {
+public class AllSubjectsResponse {
 
-    public String email;
+    private String subjects;
+    private Integer tutorCount;
 }
