@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDetailsCheckResponse {
-    private boolean userExist;
+    private boolean detailsFilled;
 }

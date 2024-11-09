@@ -24,7 +24,9 @@ public class UserService {
         }
 
         UserDetails userDetails = userDetailsRepository.findByEmail(email);
-        if (userDetails == null) return ResponseEntity.status(404).build();
+        if (userDetails == null) {
+            return ResponseEntity.ok(new UserDetailsCheckResponse(false));
+        }
 
         boolean userDetailsFilled = userDetails.getEmail() != null &&
                 userDetails.getFirstName() != null &&
