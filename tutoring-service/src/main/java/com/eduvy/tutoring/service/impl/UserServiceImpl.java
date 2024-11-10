@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-
         String email = userDetails.getEmail();
 
         return email;
@@ -40,7 +39,10 @@ public class UserServiceImpl implements UserService {
 
         HttpGet request = new HttpGet(url);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
-            if (response.getStatusLine().getStatusCode() != 200) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.printf("Request url: " + url + " | status code: " + statusCode );
+
+            if (statusCode != 200) {
                 return null;
             }
 

@@ -31,15 +31,20 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     @Transactional
     public ResponseEntity<TutorProfileManagementResponse> createTutorProfile(CreateTutorProfileRequest createTutorProfileRequest) {
         UserDetails tutor = userService.getUserDetails();
-        if (tutor == null) return //todo check status code
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (tutor == null) {
+            System.out.println("Failed to find user.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        if (tutorProfileRepository.findTutorProfileByMail(tutor.getEmail()) != null) {
+        if (tutorProfileRepository.findTutorProfileByTutorMail(tutor.getEmail()) != null) {
+            System.out.println("Tutor profile already exists.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (createTutorProfileRequest == null)
+        if (createTutorProfileRequest == null) {
+            System.out.println("Null request.");
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
 
         //todo create validation
         TutorProfile tutorProfile = new TutorProfile(
@@ -69,7 +74,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     @Transactional
     public ResponseEntity<TutorProfileManagementResponse> getTutorProfile() {
         String tutor = userService.getUserMail();
-        TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByMail(tutor);
+        TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(tutor);
 
         if (tutorProfile == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -94,7 +99,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
         if (createTutorProfileRequest == null)
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
-        TutorProfile existingTutorProfile = tutorProfileRepository.findTutorProfileByMail(tutorMail);
+        TutorProfile existingTutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(tutorMail);
         if (existingTutorProfile == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 

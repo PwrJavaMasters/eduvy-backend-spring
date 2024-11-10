@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TutorProfileRepository extends JpaRepository<TutorProfile, Long> {
 
-    TutorProfile findTutorProfileByMail(String tutor);
+    TutorProfile findTutorProfileByTutorMail(String tutor);
 
     TutorProfile findTutorProfileById(Long id);
 
