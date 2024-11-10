@@ -13,7 +13,6 @@ public class FillUserDetailsRequest {
     public String firstName;
     public String lastName;
     public LocalDate dateOfBirth;
-    public Boolean isAdmin;
     public Boolean isTeacher;
     public Boolean isStudent;
     public Boolean isNewsletter;

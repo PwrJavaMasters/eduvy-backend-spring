@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDetails userData = userDetailsRepository.findByEmail(email);
-        if (userDetails == null) {
+        if (userData == null) {
             return ResponseEntity.ok(new UserDetailsCheckResponse(false));
         }
 
@@ -123,7 +123,6 @@ public class UserServiceImpl implements UserService {
         if (fillUserDetailsRequest.firstName == null ||
                 fillUserDetailsRequest.lastName == null ||
                 fillUserDetailsRequest.dateOfBirth == null ||
-                fillUserDetailsRequest.isAdmin == null ||
                 fillUserDetailsRequest.isTeacher == null ||
                 fillUserDetailsRequest.isStudent == null ||
                 fillUserDetailsRequest.isNewsletter == null ||

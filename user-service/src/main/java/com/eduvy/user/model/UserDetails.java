@@ -37,6 +37,7 @@ public class UserDetails {
         firstName = fillUserDetailsRequest.firstName;
         lastName = fillUserDetailsRequest.lastName;
         dateOfBirth = fillUserDetailsRequest.dateOfBirth; // todo check format
+        isAdmin = false;
         isTeacher = fillUserDetailsRequest.isTeacher;
         isStudent = fillUserDetailsRequest.isStudent;
         isNewsletter = fillUserDetailsRequest.isNewsletter;
