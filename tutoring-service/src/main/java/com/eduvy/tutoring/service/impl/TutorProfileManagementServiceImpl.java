@@ -59,6 +59,8 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
 
         TutorProfileManagementResponse response = new TutorProfileManagementResponse(
                 tutorProfile.getSubjects(),
+                tutorProfile.getFirstName(),
+                tutorProfile.getLastName(),
                 tutorProfile.getDescription(),
                 createProfileUrl(tutorProfile)
         );
@@ -81,6 +83,8 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
 
         TutorProfileManagementResponse tutorProfileResponse = new TutorProfileManagementResponse(
                 tutorProfile.getSubjects(),
+                tutorProfile.getFirstName(),
+                tutorProfile.getLastName(),
                 tutorProfile.getDescription(),
                 createProfileUrl(tutorProfile)
         );
@@ -109,6 +113,8 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
 
         TutorProfileManagementResponse response = new TutorProfileManagementResponse(
                 existingTutorProfile.getSubjects(),
+                existingTutorProfile.getFirstName(),
+                existingTutorProfile.getLastName(),
                 existingTutorProfile.getDescription(),
                 createProfileUrl(existingTutorProfile)
         );
