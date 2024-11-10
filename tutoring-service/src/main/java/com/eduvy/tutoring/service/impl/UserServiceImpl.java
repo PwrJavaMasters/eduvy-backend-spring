@@ -1,5 +1,6 @@
 package com.eduvy.tutoring.service.impl;
 
+import com.eduvy.tutoring.UserInfoDetails;
 import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,7 +24,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getUserMail() {
-        return "";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+
+        String email = userDetails.getEmail();
+
+        return email;
     }
 
     @Override

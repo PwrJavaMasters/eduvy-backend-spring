@@ -24,7 +24,7 @@ public class UserServiceApplication {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**","/api-docs/**","/swagger-resources/**","/register","/login", "/swagger-ui.html/**")
+                .authorizeHttpRequests(request -> request.requestMatchers("/internal/**")
                         .permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
