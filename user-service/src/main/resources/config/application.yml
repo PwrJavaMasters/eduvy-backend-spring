@@ -11,7 +11,7 @@ spring:
     show-sql: true
 
 server:
-  port: ${USER_PORT:8082}
+  port: ${USER_PORT:8083}
 
 auth0:
   audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt

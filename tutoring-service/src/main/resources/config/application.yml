@@ -1,6 +1,20 @@
 spring:
   application:
     name: tutoring-service
+  datasource:
+    url: jdbc:postgresql://88.198.122.46:5435/tutoring_db_dev
+    username: tutor_user_dev
+    password: tutor_pass_dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 server:
-  port: ${TUTORING_PORT:8083}
+  port: ${TUTORING_PORT:8085}
+
+auth0:
+  audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
+  issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
+
+
