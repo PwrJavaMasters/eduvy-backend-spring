@@ -1,6 +1,7 @@
 package com.eduvy.user.service;
 
 
+import com.eduvy.user.UserInfoDetails;
 import com.eduvy.user.controller.dto.FillUserDetailsRequest;
 import com.eduvy.user.controller.dto.UserDetailsCheckResponse;
 import com.eduvy.user.controller.dto.UserDetailsCheckRequest;
@@ -10,6 +11,8 @@ import com.eduvy.user.repository.UserDetailsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,45 +21,62 @@ public class UserService {
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
-    public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled(String email) {
+
+
+    public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+
+        String email = userDetails.getEmail();
+
+
         if (email == null) {
             return ResponseEntity.status(422).build();
         }
 
-        UserDetails userDetails = userDetailsRepository.findByEmail(email);
+        UserDetails userData = userDetailsRepository.findByEmail(email);
         if (userDetails == null) {
             return ResponseEntity.ok(new UserDetailsCheckResponse(false));
         }
 
-        boolean userDetailsFilled = userDetails.getEmail() != null &&
-                userDetails.getFirstName() != null &&
-                userDetails.getLastName() != null &&
-                userDetails.getDateOfBirth() != null &&
-                userDetails.getIsTeacher() != null &&
-                userDetails.getIsStudent() != null &&
-                userDetails.getIsNewsletter() != null;
+        boolean userDetailsFilled = userData.getEmail() != null &&
+                userData.getFirstName() != null &&
+                userData.getLastName() != null &&
+                userData.getDateOfBirth() != null &&
+                userData.getIsTeacher() != null &&
+                userData.getIsStudent() != null &&
+                userData.getIsNewsletter() != null;
 
         return ResponseEntity.ok(new UserDetailsCheckResponse(userDetailsFilled));
     }
 
-    public ResponseEntity<UserDetailsResponse> getUserDetails(String email) {
+    public ResponseEntity<UserDetailsResponse> getUserDetails() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
+
+        String email = userDetails.getEmail();
+
         if (email == null) {
             return ResponseEntity.status(422).build();
         }
 
         System.out.println("Looking for user details for " + email);
-        UserDetails userDetails = userDetailsRepository.findByEmail(email);
-        if (userDetails == null) return ResponseEntity.status(404).build();
+        UserDetails userData = userDetailsRepository.findByEmail(email);
+        if (userData == null) return ResponseEntity.status(404).build();
 
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse(
-                userDetails.getEmail(),
-                userDetails.getFirstName(),
-                userDetails.getLastName(),
-                userDetails.getDateOfBirth(),
-                userDetails.getIsAdmin(),
-                userDetails.getIsTeacher(),
-                userDetails.getIsStudent(),
-                userDetails.getIsNewsletter()
+                userData.getEmail(),
+                userData.getFirstName(),
+                userData.getLastName(),
+                userData.getDateOfBirth(),
+                userData.getIsAdmin(),
+                userData.getIsTeacher(),
+                userData.getIsStudent(),
+                userData.getIsNewsletter()
         );
 
         return ResponseEntity.ok().body(userDetailsResponse);
@@ -68,10 +88,10 @@ public class UserService {
             return ResponseEntity.status(422).build();
         }
 
-        UserDetails userDetails = userDetailsRepository.findByEmail(fillUserDetailsRequest.email);
-        if (userDetails == null) {
-            userDetails = new UserDetails();
-            userDetails.setEmail(fillUserDetailsRequest.email);
+        UserDetails userData = userDetailsRepository.findByEmail(fillUserDetailsRequest.email);
+        if (userData == null) {
+            userData = new UserDetails();
+            userData.setEmail(fillUserDetailsRequest.email);
         }
 
         if (fillUserDetailsRequest.firstName == null ||
@@ -85,8 +105,8 @@ public class UserService {
             return ResponseEntity.status(422).build();
         }
 
-        userDetails.setUserDetails(fillUserDetailsRequest);
-        userDetailsRepository.save(userDetails);
+        userData.setUserDetails(fillUserDetailsRequest);
+        userDetailsRepository.save(userData);
 
         return ResponseEntity.ok().build();
     }

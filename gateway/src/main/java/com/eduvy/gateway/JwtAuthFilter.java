@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -55,9 +56,10 @@ public class JwtAuthFilter implements WebFilter {
             DecodedJWT decodedJWT = decodeToken(token);
 
             String username = decodedJWT.getSubject();
-            List<String> roles = decodedJWT.getClaim("permissions").asList(String.class);
+            List<String> roles = decodedJWT.getClaim("user_roles").asList(String.class);
+            String nickname = decodedJWT.getClaim("nickname").asString();
+            String email = decodedJWT.getClaim("email").asString();
 
-            //TODO change logic/remove
             if (roles == null) {
                 roles = Collections.singletonList("ROLE_USER");
             }
@@ -68,6 +70,11 @@ public class JwtAuthFilter implements WebFilter {
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     username, null, authorities);
+
+            authentication.setDetails(Map.of(
+                    "nickname", nickname,
+                    "email", email
+            ));
 
             SecurityContext securityContext = new SecurityContextImpl(authentication);
 

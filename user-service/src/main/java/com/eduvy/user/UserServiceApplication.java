@@ -1,14 +1,34 @@
 package com.eduvy.user;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "User Service API", version = "1.0", description = "User Service API Documentation"))
+@EnableWebSecurity
 public class UserServiceApplication {
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**","/api-docs/**","/swagger-resources/**","/register","/login", "/swagger-ui.html/**")
+                        .permitAll().anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 }
+
+
