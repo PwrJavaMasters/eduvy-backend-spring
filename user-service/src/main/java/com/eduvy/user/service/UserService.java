@@ -16,6 +16,8 @@ public interface UserService {
 
     ResponseEntity<UserDetailsResponse> getUserDetails();
 
+    ResponseEntity<UserDetailsResponse> getUserDetailsByMail(String mail);
+
     ResponseEntity<Void> fillUserDetails(FillUserDetailsRequest fillUserDetailsRequest);
 }
 

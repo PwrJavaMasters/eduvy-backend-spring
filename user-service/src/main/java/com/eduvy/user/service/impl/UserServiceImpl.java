@@ -1,3 +1,5 @@
+package com.eduvy.user.service.impl;
+
 import com.eduvy.user.UserInfoDetails;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
@@ -9,14 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 
 import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
-import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
-import com.eduvy.user.model.UserDetails;
-import org.springframework.http.ResponseEntity;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +23,10 @@ public class UserServiceImpl implements UserService {
     UserDetailsRepository userDetailsRepository;
 
 
+    @Override
+    public UserDetails getUserFromContext() {
+        return null;
+    }
 
     public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled() {
 
@@ -80,6 +82,27 @@ public class UserServiceImpl implements UserService {
                 userData.getIsTeacher(),
                 userData.getIsStudent(),
                 userData.getIsNewsletter()
+        );
+
+        return ResponseEntity.ok().body(userDetailsResponse);
+    }
+
+    @Override
+    public ResponseEntity<UserDetailsResponse> getUserDetailsByMail(String email) {
+        System.out.println("Looking for user details for " + email);
+
+        UserDetails userDetails = userDetailsRepository.findByEmail(email);
+        if (userDetails == null) return ResponseEntity.status(404).build();
+
+        UserDetailsResponse userDetailsResponse = new UserDetailsResponse(
+                userDetails.getEmail(),
+                userDetails.getFirstName(),
+                userDetails.getLastName(),
+                userDetails.getDateOfBirth(),
+                userDetails.getIsAdmin(),
+                userDetails.getIsTeacher(),
+                userDetails.getIsStudent(),
+                userDetails.getIsNewsletter()
         );
 
         return ResponseEntity.ok().body(userDetailsResponse);
