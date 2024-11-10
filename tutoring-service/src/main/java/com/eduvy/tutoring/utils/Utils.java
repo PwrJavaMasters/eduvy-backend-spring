@@ -1,13 +1,13 @@
-package com.eduvy.user.utils;
+package com.eduvy.tutoring.utils;
 
-import com.eduvy.user.model.UserDetails;
+import com.eduvy.tutoring.model.Appointment;
+import com.eduvy.tutoring.model.TutorProfile;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -28,12 +28,20 @@ public class Utils {
 
     private static Hashids hashids = new Hashids("eduvy", 7);// do not change salt
 
-    public static String encodeUserId(UserDetails user) {
-        return "EDUVY-USER_" + hashids.encode(user.getId());
+    public static String encodeTutorProfileId(TutorProfile tutorProfile) {
+        return "EDUVY-TUTOR_" + hashids.encode(tutorProfile.getId());
     }
 
-    public static Long decodeUserId(String hashId) {
-        return decodeId(hashId, "EDUVY-USER");
+    public static Long decodeTutorProfileId(String hashId) {
+        return decodeId(hashId, "EDUVY-TUTOR");
+    }
+
+    public static String encodeAppointmentId(Appointment appointment) {
+        return "EDUVY-APPOINTMENT_" + hashids.encode(appointment.getId());
+    }
+
+    public static Long decodeAppointmentId(String hashId) {
+        return decodeId(hashId, "EDUVY-APPOINTMENT");
     }
 
     public static Long decodeId(String hashId, String idType) {
