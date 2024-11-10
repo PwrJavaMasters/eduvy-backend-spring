@@ -22,14 +22,14 @@ public class UserController {
         return "User Service is up";
     }
 
-    @GetMapping("/is-filled-details/{email}")
-    public ResponseEntity<UserDetailsCheckResponse> filledDetails(@PathVariable("email") String email) {
-        return userService.userDetailsFilled(email);
+    @GetMapping("/is-filled-details")
+    public ResponseEntity<UserDetailsCheckResponse> filledDetails() {
+        return userService.userDetailsFilled();
     }
 
-    @GetMapping("/user-details/{email}")
-    public ResponseEntity<UserDetailsResponse> getUserDetails(@PathVariable("email") String email) {
-        return userService.getUserDetails(email);
+    @GetMapping("/user-details")
+    public ResponseEntity<UserDetailsResponse> getUserDetails() {
+        return userService.getUserDetails();
     }
 
     @PostMapping("/user-details")

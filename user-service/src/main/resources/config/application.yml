@@ -1,6 +1,18 @@
 spring:
   application:
     name: user-service
+  datasource:
+    url: jdbc:postgresql://88.198.122.46:5434/user_db_dev
+    username: user_user_dev
+    password: user_pass_dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 server:
   port: ${USER_PORT:8082}
+
+auth0:
+  audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
+  issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
