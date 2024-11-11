@@ -16,6 +16,8 @@ import java.util.List;
 public class TutorProfileManagementResponse {
 
     private List<SubjectData> subjects;
+    private String firstName;
+    private String lastName;
     private String description;
     private String profileUrl;
 }

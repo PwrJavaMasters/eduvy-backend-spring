@@ -44,21 +44,21 @@ public class TutorController {
     @GetMapping("/subject/{subject}")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
-    public ResponseEntity<List<TutorBySubjectResponse>> getTutorsBySubject(@PathVariable String subject) {
+    public ResponseEntity<List<TutorBySubjectResponse>> getTutorsBySubject(@PathVariable("subject") String subject) {
         return tutorsService.getTutorsBySubjects(subject);
     }
 
     @GetMapping("/profile/{tutorId}")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
-    public ResponseEntity<GetTutorProfileResponse> getTutorProfile(@PathVariable String tutorId) {
+    public ResponseEntity<GetTutorProfileResponse> getTutorProfile(@PathVariable("tutorId") String tutorId) {
         return tutorsService.getTutorById(tutorId);
     }
 
     @PostMapping("/profile/{tutorId}/book")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')") // todo decide on auth
-    public ResponseEntity<BookAppointmentResponse> bookAppointment(@PathVariable String tutorId,
+    public ResponseEntity<BookAppointmentResponse> bookAppointment(@PathVariable("tutorId") String tutorId,
                                                                    @RequestBody BookAppointmentRequest bookAppointmentRequest) {
         return appointmentService.bookAppointment(bookAppointmentRequest, tutorId);
     }
@@ -66,8 +66,8 @@ public class TutorController {
     @PostMapping("/profile/{tutorId}/get-availability")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
-    public ResponseEntity<GetAvailabilityResponse> getTutorAvailability(@PathVariable String tutorId,
-                                                                        GetAvailabilityRequest getAvailabilityRequest) {
+    public ResponseEntity<GetAvailabilityResponse> getTutorAvailability(@PathVariable("tutorId") String tutorId,
+                                                                        @RequestBody GetAvailabilityRequest getAvailabilityRequest) {
         return tutorAvailabilityService.getDayAvailabilityByTutorId(tutorId, getAvailabilityRequest);
     }
 }

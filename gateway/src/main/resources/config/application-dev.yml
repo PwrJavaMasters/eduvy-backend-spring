@@ -14,10 +14,6 @@ spring:
           uri: http://tutoring-service:${TUTORING_PORT}
           predicates:
             - Path=/tutoring/**
-        - id: user-service-swagger
-          uri: http://user-service:${USER_PORT}
-          predicates:
-            - Path=/user-service/swagger-ui/**
 
 logging:
   level:
