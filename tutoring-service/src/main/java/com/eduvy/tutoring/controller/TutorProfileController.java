@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/tutor-profile")
+@RequestMapping("tutoring/tutor-profile")
 public class TutorProfileController {
 
     TutorProfileManagementService tutorProfileService;

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/calendar")
+@RequestMapping("tutoring/calendar")
 public class StudentAppointmentController {
 
     AppointmentManagementService appointmentService;

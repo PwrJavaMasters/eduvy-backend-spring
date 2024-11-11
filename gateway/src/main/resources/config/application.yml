@@ -28,7 +28,7 @@ spring:
           predicates:
             - Path=/users/**
         - id: tutoring-service
-          uri: http://localhost:${TUTORING_PORT:8085}
+          uri: http://localhost:8085
           predicates:
             - Path=/tutoring/**
         - id: user-service-swagger

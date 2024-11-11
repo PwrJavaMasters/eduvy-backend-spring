@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/tutor")
+@RequestMapping("tutoring/tutor")
 public class TutorController {
 
     TutorsService tutorsService;
