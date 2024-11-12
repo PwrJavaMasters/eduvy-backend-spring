@@ -1,4 +1,4 @@
-package com.eduvy.user;
+package com.eduvy.user.config.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

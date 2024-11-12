@@ -1,6 +1,6 @@
 package com.eduvy.user.service.impl;
 
-import com.eduvy.user.UserInfoDetails;
+import com.eduvy.user.config.security.UserInfoDetails;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.UserDetailsRepository;

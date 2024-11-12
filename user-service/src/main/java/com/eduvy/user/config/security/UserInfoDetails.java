@@ -1,11 +1,8 @@
-package com.eduvy.user;
+package com.eduvy.user.config.security;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +14,6 @@ public class UserInfoDetails implements UserDetails {
     private String nickname;
     private String password;
     private List<GrantedAuthority> authorities;
-
-
 
     public UserInfoDetails(String email, String nickname, String password, List<GrantedAuthority> authorities) {
         this.email = email;
