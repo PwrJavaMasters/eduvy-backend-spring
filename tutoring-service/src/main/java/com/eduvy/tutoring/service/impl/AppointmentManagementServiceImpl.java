@@ -23,6 +23,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
+
 @Service
 @AllArgsConstructor
 public class AppointmentManagementServiceImpl implements AppointmentManagementService {
@@ -37,7 +39,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
 
     @Override
     public ResponseEntity<BookAppointmentResponse> bookAppointment(BookAppointmentRequest bookAppointmentRequest, String tutorId) {
-        String studentMail = userService.getUserMail();
+        String studentMail = getCurrentUserMailFromContext();
         if (studentMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -120,7 +122,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
 
     @Override
     public ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByDay(GetAvailabilityRequest getAvailabilityRequest) {
-        String student = userService.getUserMail();
+        String student = getCurrentUserMailFromContext();
         if (student == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 

@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
+
 @Service
 @AllArgsConstructor
 public class TutorProfileManagementServiceImpl implements TutorProfileManagementService {
@@ -75,7 +77,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     @Override
     @Transactional
     public ResponseEntity<TutorProfileManagementResponse> getTutorProfile() {
-        String tutor = userService.getUserMail();
+        String tutor = getCurrentUserMailFromContext();
         TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(tutor);
 
         if (tutorProfile == null)
@@ -95,7 +97,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     @Override
     @Transactional
     public ResponseEntity<TutorProfileManagementResponse> editTutorProfile(CreateTutorProfileRequest createTutorProfileRequest) {
-        String tutorMail = userService.getUserMail();
+        String tutorMail = getCurrentUserMailFromContext();
 
         if (tutorMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

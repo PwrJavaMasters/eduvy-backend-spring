@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
+
 @Service
 @AllArgsConstructor
 public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
@@ -38,7 +40,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
     @Override
     @Transactional
     public ResponseEntity<GetAvailabilityResponse> addAvailabilityBlock(AddAvailabilityBlockRequest addAvailabilityBlockRequest) {
-        String userMail = userService.getUserMail();
+        String userMail = getCurrentUserMailFromContext();
         if (userMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -58,7 +60,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
 
     @Override
     public ResponseEntity<GetAvailabilityResponse> getDayAvailability(GetAvailabilityRequest getAvailabilityRequest) {
-        String userMail = userService.getUserMail();
+        String userMail = getCurrentUserMailFromContext();
         if (userMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 

@@ -31,13 +31,6 @@ public class UserServiceImpl implements UserService {
             .create();
 
     @Override
-    public String getUserMail() {
-        String email = getCurrentUserMailFromContext();
-
-        return email;
-    }
-
-    @Override
     public UserDetails getUserDetails() {
         String userMail = getCurrentUserMailFromContext();
         String url = "http://localhost:8083/internal/user-details/" + userMail;
