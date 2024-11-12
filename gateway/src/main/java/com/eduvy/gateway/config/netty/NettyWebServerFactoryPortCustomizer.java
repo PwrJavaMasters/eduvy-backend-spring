@@ -1,4 +1,4 @@
-package com.eduvy.gateway;
+package com.eduvy.gateway.config.netty;
 
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;

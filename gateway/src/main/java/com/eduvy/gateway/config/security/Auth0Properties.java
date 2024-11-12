@@ -1,4 +1,4 @@
-package com.eduvy.gateway;
+package com.eduvy.gateway.config.security;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +12,4 @@ import org.springframework.context.annotation.Configuration;
 public class Auth0Properties {
     private String audience;
     private String issuer;
-    private String jwksUri;
 }
