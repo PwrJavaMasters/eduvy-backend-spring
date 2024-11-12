@@ -1,6 +1,6 @@
-package com.eduvy.user.utils;
+package com.eduvy.tutoring.utils;
 
-import com.eduvy.user.config.security.UserInfoDetails;
+import com.eduvy.tutoring.config.security.UserInfoDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
