@@ -2,10 +2,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: authorization-service
-          uri: http://authorization-service:${AUTHORIZATION_PORT}
-          predicates:
-            - Path=/auth/**
         - id: user-service
           uri: http://user-service:${USER_PORT}
           predicates:

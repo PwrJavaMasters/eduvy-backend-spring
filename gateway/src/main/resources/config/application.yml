@@ -12,10 +12,10 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/tutoring/**
-        - id: user-service-swagger
-          uri: http://user-service:${USER_PORT:8083}
+        - id: chat-service
+          uri: http://localhost:8086
           predicates:
-            - Path=/user-service/swagger-ui/**
+            - Path=/chat/**
 
 auth0:
   audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
