@@ -1,4 +1,4 @@
-package com.eduvy.gateway;
+package com.eduvy.gateway.config.security;
 
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
@@ -43,7 +43,7 @@ public class JwtAuthFilter implements WebFilter {
 
     @PostConstruct
     public void init() {
-        this.jwkProvider = new JwkProviderBuilder("https://dev-gknidk2q1foe4txe.us.auth0.com")
+        this.jwkProvider = new JwkProviderBuilder(auth0Properties.getIssuer())
                 .cached(10, 24, TimeUnit.HOURS) // Cache up to 10 public keys for 24 hours
                 .build();
     }

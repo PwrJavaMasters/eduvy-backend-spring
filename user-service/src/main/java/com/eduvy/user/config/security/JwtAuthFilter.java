@@ -1,4 +1,4 @@
-package com.eduvy.tutoring;
+package com.eduvy.user.config.security;
 
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
@@ -41,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (token != null && validateToken(token)) {
             DecodedJWT decodedJWT = decodeToken(token);
 
-            String username = decodedJWT.getSubject();
+            String auth0UserId = decodedJWT.getSubject();
             List<String> roles = decodedJWT.getClaim("user_roles").asList(String.class);
             String nickname = decodedJWT.getClaim("nickname").asString();
             String email = decodedJWT.getClaim("email").asString();
@@ -56,13 +57,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            UserDetails userDetails = new UserInfoDetails(email, nickname, "", authorities);
+            UserDetails userDetails = new UserInfoDetails(auth0UserId, email, nickname, "", authorities);
 
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
         }
 
         filterChain.doFilter(request, response);
@@ -82,8 +84,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .cached(10, 24, TimeUnit.HOURS) // Cache up to 10 public keys for 24 hours
                 .build();
     }
-
-
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

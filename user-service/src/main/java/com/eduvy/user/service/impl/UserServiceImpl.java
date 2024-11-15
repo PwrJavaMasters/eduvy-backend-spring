@@ -1,6 +1,5 @@
 package com.eduvy.user.service.impl;
 
-import com.eduvy.user.UserInfoDetails;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.UserDetailsRepository;
@@ -9,12 +8,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 
 import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
+
+import static com.eduvy.user.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,12 +28,7 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-
-        String email = userDetails.getEmail();
-
+        String email = getCurrentUserMailFromContext();
 
         if (email == null) {
             return ResponseEntity.status(422).build();
@@ -59,11 +52,7 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity<UserDetailsResponse> getUserDetails() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-
-        String email = userDetails.getEmail();
+        String email = getCurrentUserMailFromContext();
 
         if (email == null) {
             return ResponseEntity.status(422).build();

@@ -1,4 +1,4 @@
-package com.eduvy.user;
+package com.eduvy.tutoring.config.security;
 
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
@@ -19,7 +19,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (token != null && validateToken(token)) {
             DecodedJWT decodedJWT = decodeToken(token);
 
-            String username = decodedJWT.getSubject();
+            String auth0UserId = decodedJWT.getSubject();
             List<String> roles = decodedJWT.getClaim("user_roles").asList(String.class);
             String nickname = decodedJWT.getClaim("nickname").asString();
             String email = decodedJWT.getClaim("email").asString();
@@ -54,12 +52,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
 
-
             List<GrantedAuthority> authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            UserDetails userDetails = new UserInfoDetails(email, nickname, "", authorities);
+            UserDetails userDetails = new UserInfoDetails(auth0UserId, email, nickname, "", authorities);
 
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -86,8 +83,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 .cached(10, 24, TimeUnit.HOURS) // Cache up to 10 public keys for 24 hours
                 .build();
     }
-
-
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

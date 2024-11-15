@@ -1,9 +1,8 @@
 package com.eduvy.tutoring.service.impl;
 
-import com.eduvy.tutoring.UserInfoDetails;
+import com.eduvy.tutoring.config.security.UserInfoDetails;
 import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -20,6 +19,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -30,18 +31,8 @@ public class UserServiceImpl implements UserService {
             .create();
 
     @Override
-    public String getUserMail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
-        String email = userDetails.getEmail();
-
-        return email;
-    }
-
-    @Override
     public UserDetails getUserDetails() {
-        String userMail = getUserMail();
+        String userMail = getCurrentUserMailFromContext();
         String url = "http://localhost:8083/internal/user-details/" + userMail;
 
         HttpGet request = new HttpGet(url);

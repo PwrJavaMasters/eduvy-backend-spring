@@ -1,28 +1,9 @@
 spring:
   application:
     name: gateway
-  security:
-    oauth2:
-      client:
-        registration:
-          auth0:
-            client-id: YOUR_CLIENT_ID
-            client-secret: YOUR_CLIENT_SECRET
-            scope: openid profile email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
-            client-authentication-method: post
-        provider:
-          auth0:
-            issuer-uri: https://YOUR_DOMAIN/
-
   cloud:
     gateway:
       routes:
-        - id: authorization-service
-          uri: http://localhost:${AUTHORIZATION_PORT:8081}
-          predicates:
-            - Path=/auth/**
         - id: user-service
           uri: http://localhost:8083
           predicates:
@@ -31,10 +12,6 @@ spring:
           uri: http://localhost:8085
           predicates:
             - Path=/tutoring/**
-        - id: chat-service
-          uri: http://localhost:8086
-          predicates:
-            - Path=/chat/**
         - id: user-service-swagger
           uri: http://user-service:${USER_PORT:8083}
           predicates:
@@ -45,9 +22,5 @@ auth0:
   issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
 
 server:
-  port: ${GATEWAY_PORT:8081}
+  port: 8081
 
-logging:
-  level:
-    root: DEBUG
-    io.netty: DEBUG
