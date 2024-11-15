@@ -1,6 +1,0 @@
-spring:
-  application:
-    name: authorization-service
-
-server:
-  port: ${AUTHORIZATION_PORT:8081}

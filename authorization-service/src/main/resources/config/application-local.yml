@@ -1,9 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://auth-db:5432/${AUTH_DB_NAME}
-    username: ${AUTH_DB_USER:auth_user_dev}
-    password: ${AUTH_DB_PASSWORD:auth_pass_dev}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
