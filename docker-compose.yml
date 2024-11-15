@@ -20,22 +20,6 @@ services:
     networks:
       - app-network
 
-  authorization-service:
-    image: ${AUTHORIZATION_IMAGE}
-    build: ./authorization-service
-    ports:
-      - "${AUTHORIZATION_PORT}:${AUTHORIZATION_PORT}"
-    environment:
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
-      - AUTHORIZATION_PORT=${AUTHORIZATION_PORT}
-      - AUTH_DB_NAME=${AUTH_DB_NAME}
-      - AUTH_DB_USER=${AUTH_DB_USER}
-      - AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}
-    depends_on:
-      - auth-db
-    networks:
-      - app-network
-
   user-service:
     image: ${USER_IMAGE}
     build: ./user-service
@@ -84,19 +68,6 @@ services:
     networks:
       - app-network
 
-  auth-db:
-    image: postgres:17
-    environment:
-      POSTGRES_USER: ${AUTH_DB_USER}
-      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
-      POSTGRES_DB: ${AUTH_DB_NAME}
-    volumes:
-      - auth_db_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
-    networks:
-      - app-network
-
   user-db:
     image: postgres:17
     environment:
@@ -140,7 +111,6 @@ networks:
   app-network:
 
 volumes:
-  auth_db_data:
   user_db_data:
   tutoring_db_data:
   chat_db_data:
