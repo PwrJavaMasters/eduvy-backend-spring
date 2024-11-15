@@ -1,6 +1,18 @@
 spring:
   application:
     name: chat-service
+  datasource:
+    url: jdbc:postgresql://88.198.122.46:5436/chat_db_dev
+    username: chat_user_dev
+    password: chat_pass_dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 server:
   port: ${CHAT_PORT:8086}
+
+auth0:
+  audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
+  issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
