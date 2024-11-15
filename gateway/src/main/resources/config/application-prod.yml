@@ -14,3 +14,7 @@ spring:
           uri: http://tutoring-service:${TUTORING_PORT}
           predicates:
             - Path=/tutoring/**
+        - id: chat-service
+          uri: http://chat-service:${CHAT_PORT}
+          predicates:
+            - Path=/chat/**

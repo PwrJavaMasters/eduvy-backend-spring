@@ -14,6 +14,10 @@ spring:
           uri: http://localhost:${TUTORING_PORT}
           predicates:
             - Path=/tutoring/**
+        - id: chat-service
+          uri: http://localhost:${CHAT_PORT}
+          predicates:
+            - Path=/chat/**
 
 server:
   port: 8081

@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${CHAT_DB_PORT_LOCAL:5432}/${CHAT_DB_NAME_LOCAL:authorization_db_dev}
+    username: ${CHAT_DB_USER:chat_user_dev}
+    password: ${CHAT_DB_PASSWORD:chat_pass_dev}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
