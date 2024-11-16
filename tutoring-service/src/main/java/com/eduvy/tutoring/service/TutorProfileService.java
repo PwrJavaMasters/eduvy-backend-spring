@@ -14,4 +14,6 @@ public interface TutorProfileService {
     int getReviewNumber(TutorProfile tutorProfile);
 
     Double getSubjectPrice(TutorProfile tutorProfile, String subject);
+
+    TutorProfile getTutorProfileByTutorMail(String userMail);
 }

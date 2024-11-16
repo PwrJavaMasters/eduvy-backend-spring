@@ -2,6 +2,7 @@ package com.eduvy.tutoring.service;
 
 
 import com.eduvy.tutoring.dto.appointment.*;
+import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -14,4 +15,6 @@ public interface AppointmentManagementService {
     ResponseEntity<ConfirmAppointmentResponse> confirmAppointment(ConfirmAppointmentRequest confirmAppointmentRequest);
 
     ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByDay(GetAvailabilityRequest getAvailabilityRequest);
+
+    ResponseEntity<List<TutorAppointmentResponse>> getTutorAppointmentsByDay(DayRequest dayRequest);
 }

@@ -15,6 +15,5 @@ public class FillUserDetailsRequest {
     public LocalDate dateOfBirth;
     public Boolean isTeacher;
     public Boolean isStudent;
-    public Boolean isNewsletter;
     public Boolean isDeleted;
 }

@@ -29,7 +29,6 @@ public class UserDetails {
     private Boolean isAdmin;
     private Boolean isTeacher; //check
     private Boolean isStudent; //check
-    private Boolean isNewsletter; //check
     private Boolean isDeleted;
 
     public void setUserDetails(FillUserDetailsRequest fillUserDetailsRequest) {
@@ -40,6 +39,5 @@ public class UserDetails {
         isAdmin = false;
         isTeacher = fillUserDetailsRequest.isTeacher;
         isStudent = fillUserDetailsRequest.isStudent;
-        isNewsletter = fillUserDetailsRequest.isNewsletter;
     }
 }

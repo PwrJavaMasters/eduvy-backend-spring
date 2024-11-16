@@ -57,5 +57,8 @@ public class TutorProfileServiceImpl implements TutorProfileService {
                 .orElse(null);
     }
 
-
+    @Override
+    public TutorProfile getTutorProfileByTutorMail(String userMail) {
+        return tutorProfileRepository.findTutorProfileByTutorMail(userMail);
+    }
 }

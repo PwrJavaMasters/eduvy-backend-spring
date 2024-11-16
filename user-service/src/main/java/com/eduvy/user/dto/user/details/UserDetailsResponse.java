@@ -21,10 +21,9 @@ public class UserDetailsResponse {
     private Boolean isAdmin;
     private Boolean isTeacher;
     private Boolean isStudent;
-    private Boolean isNewsletter;
     private Boolean isDeleted;
 
-    public UserDetailsResponse(String email, String firstName, String lastName, LocalDate dateOfBirth, Boolean isAdmin, Boolean isTeacher, Boolean isStudent, Boolean isNewsletter) {
+    public UserDetailsResponse(String email, String firstName, String lastName, LocalDate dateOfBirth, Boolean isAdmin, Boolean isTeacher, Boolean isStudent) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,6 +31,5 @@ public class UserDetailsResponse {
         this.isAdmin = isAdmin;
         this.isTeacher = isTeacher;
         this.isStudent = isStudent;
-        this.isNewsletter = isNewsletter;
     }
 }

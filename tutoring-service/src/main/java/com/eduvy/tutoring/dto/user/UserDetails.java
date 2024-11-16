@@ -20,6 +20,5 @@ public class UserDetails {
     private Boolean isAdmin;
     private Boolean isTeacher; //check
     private Boolean isStudent; //check
-    private Boolean isNewsletter; //check
     private Boolean isDeleted;
 }

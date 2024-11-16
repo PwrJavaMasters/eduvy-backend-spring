@@ -2,7 +2,9 @@ package com.eduvy.tutoring.service.impl;
 
 
 import com.eduvy.tutoring.dto.appointment.*;
+import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
+import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorAvailability;
 import com.eduvy.tutoring.model.TutorProfile;
@@ -137,6 +139,29 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         return ResponseEntity.ok(userAppointmentResponses);
     }
 
+    @Override
+    public ResponseEntity<List<TutorAppointmentResponse>> getTutorAppointmentsByDay(DayRequest dayRequest) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null){
+            System.err.println("TutorProfile not found, user: " + userMail);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByTutorProfileAndDay(tutorProfile, dayRequest.getDay());
+        if (appointments.isEmpty())
+            return ResponseEntity.ok(new ArrayList<>());
+
+        List<TutorAppointmentResponse> tutorAppointmentResponses = appointments.stream()
+                .map(this::mapAppointmentToTutorAppointmentResponse)
+                .toList();
+
+        return ResponseEntity.ok(tutorAppointmentResponses);
+    }
+
     private UserAppointmentResponse mapAppointmentToUserAppointmentResponse(Appointment appointment) {
         return new UserAppointmentResponse(
                 appointment.getDay(),
@@ -152,6 +177,22 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getIsPaid() ? null : generateOneTimePaymentLink(appointment.getStudent(), appointment)
         );
     }
+
+    private TutorAppointmentResponse mapAppointmentToTutorAppointmentResponse(Appointment appointment) {
+        return new TutorAppointmentResponse(
+                appointment.getDay(),
+                appointment.getStartDate(),
+                appointment.getEndDate(),
+                appointment.getSubject(),
+                appointment.getPrice(),
+                appointment.getIsConfirmed(),
+                appointment.getMeetingUrl(),
+                appointment.getDescription(),
+                appointment.getStudent(), //todo think what to return here - was first name + last name
+                appointment.getIsPaid()
+        );
+    }
+
 
     public String generateOneTimePaymentLink(String userMail, Appointment appointment) {
         return paymentService.getPaymentUrl("todo"); //todo implement

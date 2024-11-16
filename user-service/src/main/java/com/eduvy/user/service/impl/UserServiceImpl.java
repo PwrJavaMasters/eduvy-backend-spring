@@ -44,8 +44,7 @@ public class UserServiceImpl implements UserService {
                 userData.getLastName() != null &&
                 userData.getDateOfBirth() != null &&
                 userData.getIsTeacher() != null &&
-                userData.getIsStudent() != null &&
-                userData.getIsNewsletter() != null;
+                userData.getIsStudent() != null;
 
         return ResponseEntity.ok(new UserDetailsCheckResponse(userDetailsFilled));
     }
@@ -69,8 +68,7 @@ public class UserServiceImpl implements UserService {
                 userData.getDateOfBirth(),
                 userData.getIsAdmin(),
                 userData.getIsTeacher(),
-                userData.getIsStudent(),
-                userData.getIsNewsletter()
+                userData.getIsStudent()
         );
 
         return ResponseEntity.ok().body(userDetailsResponse);
@@ -90,8 +88,7 @@ public class UserServiceImpl implements UserService {
                 userDetails.getDateOfBirth(),
                 userDetails.getIsAdmin(),
                 userDetails.getIsTeacher(),
-                userDetails.getIsStudent(),
-                userDetails.getIsNewsletter()
+                userDetails.getIsStudent()
         );
 
         return ResponseEntity.ok().body(userDetailsResponse);
@@ -114,7 +111,6 @@ public class UserServiceImpl implements UserService {
                 fillUserDetailsRequest.dateOfBirth == null ||
                 fillUserDetailsRequest.isTeacher == null ||
                 fillUserDetailsRequest.isStudent == null ||
-                fillUserDetailsRequest.isNewsletter == null ||
                 fillUserDetailsRequest.isDeleted == null) {
             return ResponseEntity.status(422).build();
         }

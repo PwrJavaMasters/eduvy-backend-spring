@@ -2,7 +2,7 @@ package com.eduvy.tutoring.service.impl;
 
 
 import com.eduvy.tutoring.dto.availibility.AddAvailabilityBlockRequest;
-import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
+import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityResponse;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorAvailability;
@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,22 +47,93 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
         if (userMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        if (addAvailabilityBlockRequest == null )
+        if (addAvailabilityBlockRequest == null || isBlockNotValid(addAvailabilityBlockRequest))
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
         TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByDay(addAvailabilityBlockRequest.getDay());
         if (tutorAvailability == null)
             tutorAvailability = new TutorAvailability(addAvailabilityBlockRequest.getDay(), userMail);
 
-        //todo do validation if block is fine and eventually add block or do some refactoring
-        tutorAvailability.getHoursBlockList().add(new HoursBlock(addAvailabilityBlockRequest.getStartTime(), addAvailabilityBlockRequest.getEndTime()));
+        Timestamp newStartTime = addAvailabilityBlockRequest.getStartTime();
+        Timestamp newEndTime = addAvailabilityBlockRequest.getEndTime();
+
+        List<HoursBlock> hoursBlockList = tutorAvailability.getHoursBlockList();
+        List<HoursBlock> newHoursBlockList = new ArrayList<>();
+
+        for (HoursBlock block : hoursBlockList) {
+            if (blocksOverlapOrTouch(block, newStartTime, newEndTime)) {
+                newStartTime = new Timestamp(Math.min(block.getStartTime().getTime(), newStartTime.getTime()));
+                newEndTime = new Timestamp(Math.max(block.getEndTime().getTime(), newEndTime.getTime()));
+            } else {
+                newHoursBlockList.add(block);
+            }
+        }
+
+        newHoursBlockList.add(new HoursBlock(newStartTime, newEndTime));
+        tutorAvailability.setHoursBlockList(newHoursBlockList);
+
         tutorAvailabilityRepository.saveAndFlush(tutorAvailability);
 
         return ResponseEntity.ok(new GetAvailabilityResponse(tutorAvailability.getDay(), tutorAvailability.getHoursBlockList()));
     }
 
+    private boolean isBlockNotValid(AddAvailabilityBlockRequest request) {
+        LocalDate startDateDay = request.getStartTime().toLocalDateTime().toLocalDate();
+        LocalDate endDateDay = request.getEndTime().toLocalDateTime().toLocalDate();
+        return  (!request.getDay().equals(startDateDay) || !request.getDay().equals(endDateDay));
+    }
+
+    private boolean blocksOverlapOrTouch(HoursBlock block, Timestamp newStartTime, Timestamp newEndTime) {
+        return !newStartTime.after(block.getEndTime()) && !newEndTime.before(block.getStartTime());
+    }
+
     @Override
-    public ResponseEntity<GetAvailabilityResponse> getDayAvailability(GetAvailabilityRequest getAvailabilityRequest) {
+    public ResponseEntity<Void> addAvailabilityBlockList(List<AddAvailabilityBlockRequest> addAvailabilityBlockRequestList) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (addAvailabilityBlockRequestList == null || addAvailabilityBlockRequestList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+
+        for (AddAvailabilityBlockRequest addAvailabilityBlockRequest : addAvailabilityBlockRequestList) {
+            if (isBlockNotValid(addAvailabilityBlockRequest)) {
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            }
+
+            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByDay(addAvailabilityBlockRequest.getDay());
+            if (tutorAvailability == null) {
+                tutorAvailability = new TutorAvailability(addAvailabilityBlockRequest.getDay(), userMail);
+            }
+
+            Timestamp newStartTime = addAvailabilityBlockRequest.getStartTime();
+            Timestamp newEndTime = addAvailabilityBlockRequest.getEndTime();
+
+            List<HoursBlock> hoursBlockList = tutorAvailability.getHoursBlockList();
+            List<HoursBlock> newHoursBlockList = new ArrayList<>();
+
+            for (HoursBlock block : hoursBlockList) {
+                if (blocksOverlapOrTouch(block, newStartTime, newEndTime)) {
+                    newStartTime = new Timestamp(Math.min(block.getStartTime().getTime(), newStartTime.getTime()));
+                    newEndTime = new Timestamp(Math.max(block.getEndTime().getTime(), newEndTime.getTime()));
+                } else {
+                    newHoursBlockList.add(block);
+                }
+            }
+
+            newHoursBlockList.add(new HoursBlock(newStartTime, newEndTime));
+            tutorAvailability.setHoursBlockList(newHoursBlockList);
+
+            tutorAvailabilityRepository.saveAndFlush(tutorAvailability);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<GetAvailabilityResponse> getDayAvailability(DayRequest getAvailabilityRequest) {
         String userMail = getCurrentUserMailFromContext();
         if (userMail == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -75,7 +149,35 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
     }
 
     @Override
-    public ResponseEntity<GetAvailabilityResponse> getDayAvailabilityByTutorId(String tutorId, GetAvailabilityRequest getAvailabilityRequest) {
+    public ResponseEntity<List<GetAvailabilityResponse>> getMonthAvailability(DayRequest getAvailabilityRequest) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        if (getAvailabilityRequest == null )
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+
+        List<TutorAvailability> tutorAvailability = getTutorAvailabilityByMonth(userMail, getAvailabilityRequest.getDay());
+        if (tutorAvailability == null)
+            return ResponseEntity.ok(new ArrayList<>());
+
+        List<GetAvailabilityResponse> responseList = new ArrayList<>();
+        for (TutorAvailability availability : tutorAvailability) {
+            responseList.add(new GetAvailabilityResponse(availability.getDay(), availability.getHoursBlockList()));
+        }
+
+        return ResponseEntity.ok(responseList);
+    }
+
+    public List<TutorAvailability> getTutorAvailabilityByMonth(String tutor, LocalDate date) {
+        YearMonth yearMonth = YearMonth.from(date);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+        return tutorAvailabilityRepository.findTutorAvailabilityByMonth(tutor, startDate, endDate);
+    }
+
+    @Override
+    public ResponseEntity<GetAvailabilityResponse> getDayAvailabilityByTutorId(String tutorId, DayRequest getAvailabilityRequest) {
         TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorId(tutorId);
         if (tutorProfile == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
