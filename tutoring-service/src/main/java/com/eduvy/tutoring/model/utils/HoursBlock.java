@@ -15,9 +15,9 @@ import java.sql.Timestamp;
 @ToString
 public class HoursBlock {
 
-    @JsonSerialize(using = TimestampSerializer.class)
+//    @JsonSerialize(using = TimestampSerializer.class)
     Timestamp startTime;
 
-    @JsonSerialize(using = TimestampSerializer.class)
+//    @JsonSerialize(using = TimestampSerializer.class)
     Timestamp endTime;
 }
