@@ -186,12 +186,14 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
         TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(tutorProfile.getTutorMail() , getAvailabilityRequest.getDay());
+        System.out.println("tutorAvailability: " + tutorAvailability);
         tutorAvailability = getDailyAvailabilityExcludingMeetings(tutorAvailability,
                 appointmentRepository.findAppointmentsByTutorProfileAndDay(tutorProfile, getAvailabilityRequest.getDay()));
 
         if (tutorAvailability == null)
             return ResponseEntity.ok(new GetAvailabilityResponse(getAvailabilityRequest.getDay(), new ArrayList<>()));
 
+        System.out.println("tutorAvailability: " + tutorAvailability.getHoursBlockList());
 
         return ResponseEntity.ok(new GetAvailabilityResponse(tutorAvailability.getDay(), tutorAvailability.getHoursBlockList()));
     }

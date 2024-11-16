@@ -1,10 +1,9 @@
 package com.eduvy.tutoring.model.utils;
 
+import com.eduvy.tutoring.utils.TimestampSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -13,8 +12,12 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class HoursBlock {
 
+    @JsonSerialize(using = TimestampSerializer.class)
     Timestamp startTime;
+
+    @JsonSerialize(using = TimestampSerializer.class)
     Timestamp endTime;
 }

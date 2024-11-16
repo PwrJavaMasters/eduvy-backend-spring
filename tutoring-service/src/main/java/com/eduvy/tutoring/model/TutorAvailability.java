@@ -34,4 +34,14 @@ public class TutorAvailability {
         this.tutor = tutor;
         this.hoursBlockList = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return "TutorAvailability{" +
+                "id=" + id +
+                ", day=" + day +
+                ", hoursBlockList=" + hoursBlockList +
+                ", tutor='" + tutor + '\'' +
+                '}';
+    }
 }
