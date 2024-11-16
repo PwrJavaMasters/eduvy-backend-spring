@@ -9,7 +9,7 @@ import java.util.TimeZone;
 public class TutoringServiceApplication {
 
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+01:00"));
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+00:00"));
         SpringApplication.run(TutoringServiceApplication.class, args);
     }
 
