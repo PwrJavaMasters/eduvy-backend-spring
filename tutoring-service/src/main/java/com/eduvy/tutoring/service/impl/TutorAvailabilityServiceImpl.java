@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
@@ -186,14 +187,13 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
         TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(tutorProfile.getTutorMail() , getAvailabilityRequest.getDay());
-        System.out.println("tutorAvailability: " + tutorAvailability);
         tutorAvailability = getDailyAvailabilityExcludingMeetings(tutorAvailability,
                 appointmentRepository.findAppointmentsByTutorProfileAndDay(tutorProfile, getAvailabilityRequest.getDay()));
 
         if (tutorAvailability == null)
             return ResponseEntity.ok(new GetAvailabilityResponse(getAvailabilityRequest.getDay(), new ArrayList<>()));
 
-        System.out.println("tutorAvailability: " + tutorAvailability.getHoursBlockList());
+        tutorAvailability.getHoursBlockList().sort(Comparator.comparing(HoursBlock::getStartTime));
 
         return ResponseEntity.ok(new GetAvailabilityResponse(tutorAvailability.getDay(), tutorAvailability.getHoursBlockList()));
     }
