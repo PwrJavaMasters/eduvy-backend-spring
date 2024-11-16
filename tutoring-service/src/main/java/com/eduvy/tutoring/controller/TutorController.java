@@ -4,7 +4,6 @@ package com.eduvy.tutoring.controller;
 import com.eduvy.tutoring.dto.appointment.BookAppointmentRequest;
 import com.eduvy.tutoring.dto.appointment.BookAppointmentResponse;
 import com.eduvy.tutoring.dto.availibility.DayRequest;
-import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityResponse;
 import com.eduvy.tutoring.dto.tutor.get.AllSubjectsResponse;
 import com.eduvy.tutoring.dto.tutor.get.AllTutorResponse;
@@ -31,7 +30,7 @@ public class TutorController {
     @GetMapping("/all")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
-    public ResponseEntity<List<AllTutorResponse>> createTutorProfile() {
+    public ResponseEntity<List<AllTutorResponse>> getAllTutorProfiles() {
         return tutorsService.getAllTutors();
     }
 

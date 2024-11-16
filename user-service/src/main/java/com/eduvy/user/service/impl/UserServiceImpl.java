@@ -110,8 +110,7 @@ public class UserServiceImpl implements UserService {
                 fillUserDetailsRequest.lastName == null ||
                 fillUserDetailsRequest.dateOfBirth == null ||
                 fillUserDetailsRequest.isTeacher == null ||
-                fillUserDetailsRequest.isStudent == null ||
-                fillUserDetailsRequest.isDeleted == null) {
+                fillUserDetailsRequest.isStudent == null) {
             return ResponseEntity.status(422).build();
         }
 
