@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +131,32 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         List<Appointment> appointments = appointmentRepository.findAppointmentsByStudentAndDay(student, getAvailabilityRequest.getDay());
+        if (appointments.isEmpty())
+            return ResponseEntity.ok(new ArrayList<>());
+
+        List<UserAppointmentResponse> userAppointmentResponses = appointments.stream()
+                .map(this::mapAppointmentToUserAppointmentResponse)
+                .toList();
+
+        return ResponseEntity.ok(userAppointmentResponses);
+    }
+
+    @Override
+    public ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByMonth(GetAvailabilityRequest getAvailabilityRequest) {
+        String student = getCurrentUserMailFromContext();
+        if (student == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        LocalDate date = getAvailabilityRequest.getDay();
+        LocalDate startOfMonth = date.withDayOfMonth(1);
+        LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByStudentAndMonth(
+                student,
+                startOfMonth,
+                endOfMonth
+        );
+
         if (appointments.isEmpty())
             return ResponseEntity.ok(new ArrayList<>());
 

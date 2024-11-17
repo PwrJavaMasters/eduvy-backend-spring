@@ -24,7 +24,14 @@ public class StudentAppointmentController {
     @PostMapping("/get-appointments")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
-    public ResponseEntity<List<UserAppointmentResponse>> getDayAvailability(@RequestBody GetAvailabilityRequest getAvailabilityRequest) {
+    public ResponseEntity<List<UserAppointmentResponse>> getStudentAppointmentsByDay(@RequestBody GetAvailabilityRequest getAvailabilityRequest) {
         return appointmentService.getUserAppointmentsByDay(getAvailabilityRequest);
+    }
+
+    @PostMapping("/get-appointments-monthly")
+//    @SecurityRequirement(name = "bearerAuth")
+//    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
+    public ResponseEntity<List<UserAppointmentResponse>> getStudentAppointmentsByMonth(@RequestBody GetAvailabilityRequest getAvailabilityRequest) {
+        return appointmentService.getUserAppointmentsByMonth(getAvailabilityRequest);
     }
 }
