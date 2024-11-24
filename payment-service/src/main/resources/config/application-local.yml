@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${CHAT_DB_PORT_LOCAL:5432}/${PAYMENT_DB_NAME_LOCAL:payment_db_dev}
+    username: ${PAYMENT_DB_USER:payment_user_dev}
+    password: ${PAYMENT_DB_PASSWORD:payment_pass_dev}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false

@@ -13,7 +13,6 @@ services:
       - chat-service
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
-      - AUTHORIZATION_PORT=${AUTHORIZATION_PORT}
       - USER_PORT=${USER_PORT}
       - TUTORING_PORT=${TUTORING_PORT}
       - CHAT_PORT=${CHAT_PORT}
@@ -68,6 +67,22 @@ services:
     networks:
       - app-network
 
+  payment-service:
+    image: ${PAYMENT_IMAGE}
+    build: ./chat-service
+    ports:
+      - "${PAYMENT_PORT}:${PAYMENT_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
+      - PAYMENT_PORT=${CHAT_PORT}
+      - PAYMENT_DB_NAME=${PAYMENT_DB_NAME}
+      - PAYMENT_DB_USER=${PAYMENT_DB_USER}
+      - PAYMENT_DB_PASSWORD=${PAYMENT_DB_PASSWORD}
+    depends_on:
+      - payment-db
+    networks:
+      - app-network
+
   user-db:
     image: postgres:17
     environment:
@@ -107,6 +122,19 @@ services:
     networks:
       - app-network
 
+  payment-db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${PAYMENT_DB_USER}
+      POSTGRES_PASSWORD: ${PAYMENT_DB_PASSWORD}
+      POSTGRES_DB: ${PAYMENT_DB_NAME}
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+    networks:
+      - app-network
+
 networks:
   app-network:
 
@@ -114,3 +142,4 @@ volumes:
   user_db_data:
   tutoring_db_data:
   chat_db_data:
+  payment_db_data:

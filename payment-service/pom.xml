@@ -9,10 +9,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>chat-service</artifactId>
+    <artifactId>payment-service</artifactId>
 
     <properties>
-        <start-class>com.eduvy.chat.PaymentServiceApplication</start-class>
+        <start-class>com.eduvy.payment.PaymentServiceApplication</start-class>
     </properties>
 
     <dependencies>
@@ -24,7 +24,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

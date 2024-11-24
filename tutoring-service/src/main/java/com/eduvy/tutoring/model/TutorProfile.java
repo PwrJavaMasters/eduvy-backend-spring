@@ -25,7 +25,7 @@ public class TutorProfile {
     private String firstName;
     private String lastName;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String tutorMail;
