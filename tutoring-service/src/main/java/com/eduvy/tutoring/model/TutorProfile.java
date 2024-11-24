@@ -24,7 +24,10 @@ public class TutorProfile {
 
     private String firstName;
     private String lastName;
+
+    @Lob
     private String description;
+
     private String tutorMail;
 
     public TutorProfile(List<SubjectData> subjects, String firstName, String lastName, String description, String tutorMail) {
