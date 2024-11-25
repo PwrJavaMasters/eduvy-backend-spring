@@ -7,7 +7,6 @@ services:
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     depends_on:
-      - authorization-service
       - user-service
       - tutoring-service
       - chat-service

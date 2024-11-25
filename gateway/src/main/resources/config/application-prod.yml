@@ -3,7 +3,7 @@ spring:
     gateway:
       routes:
         - id: payment-service
-          uri: http://authorization-service:${PAYMENT_PORT}
+          uri: payment-service:${PAYMENT_PORT}
           predicates:
             - Path=/payment/**
         - id: user-service
