@@ -105,7 +105,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             DecodedJWT jwt = JWT.decode(token);
             Jwk jwk = jwkProvider.get(jwt.getKeyId());
             RSAPublicKey publicKey = (RSAPublicKey) jwk.getPublicKey();
-            logger.error("JWT close to fail", token);
+            logger.info("JWT close to fail", token);
 
             Algorithm algorithm = Algorithm.RSA256(publicKey, null);
             JWTVerifier verifier = JWT.require(algorithm)
