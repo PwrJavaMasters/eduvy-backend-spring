@@ -94,7 +94,7 @@ services:
       - MEETING_DB_USER=${MEETING_DB_USER}
       - MEETING_DB_PASSWORD=${MEETING_DB_PASSWORD}
     depends_on:
-      - meeeting-db
+      - meeting-db
     networks:
       - app-network
 
