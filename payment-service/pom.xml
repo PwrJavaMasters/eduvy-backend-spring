@@ -67,7 +67,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.eduvy.user.UserServiceApplication</mainClass>
+                    <mainClass>com.eduvy.payment.PaymentServiceApplication</mainClass>
                     <layout>JAR</layout>
                 </configuration>
                 <executions>

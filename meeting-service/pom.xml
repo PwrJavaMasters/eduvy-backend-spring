@@ -12,7 +12,7 @@
     <artifactId>meeting-service</artifactId>
 
     <properties>
-        <start-class>com.eduvy.chat.PaymentServiceApplication</start-class>
+        <start-class>com.eduvy.meeting.MeetingServiceApplication</start-class>
     </properties>
 
     <dependencies>
