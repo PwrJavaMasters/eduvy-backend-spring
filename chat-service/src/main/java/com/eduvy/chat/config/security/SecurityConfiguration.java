@@ -25,5 +25,7 @@ public class SecurityConfiguration {
                         .permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+
+
     }
 }

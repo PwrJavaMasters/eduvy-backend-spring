@@ -7,6 +7,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.eduvy.chat.config.security.websocket.WebSocketAuthInterceptor;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,9 +37,12 @@ import java.util.stream.Collectors;
 @Setter
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getJwtFromRequest(request);
+        logger.info("Attempting to take jwt from request...", token);
 
         if (token != null && validateToken(token)) {
             DecodedJWT decodedJWT = decodeToken(token);
@@ -82,9 +88,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.jwkProvider = new JwkProviderBuilder(auth0Properties.getIssuer())
                 .cached(10, 24, TimeUnit.HOURS) // Cache up to 10 public keys for 24 hours
                 .build();
+        logger.info("Initializing...");
+
     }
 
-    private String getJwtFromRequest(HttpServletRequest request) {
+    public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
@@ -92,11 +100,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
             Jwk jwk = jwkProvider.get(jwt.getKeyId());
             RSAPublicKey publicKey = (RSAPublicKey) jwk.getPublicKey();
+            logger.info("JWT close to fail", token);
 
             Algorithm algorithm = Algorithm.RSA256(publicKey, null);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -108,12 +117,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return true;
         } catch (Exception e) {
             // Log the exception
-            logger.error("JWT validation failed", e);
+            logger.error("JWT validation failed shitt", e);
             return false;
         }
     }
 
-    private DecodedJWT decodeToken(String token) {
+    public DecodedJWT decodeToken(String token) {
         return JWT.decode(token);
     }
 }
