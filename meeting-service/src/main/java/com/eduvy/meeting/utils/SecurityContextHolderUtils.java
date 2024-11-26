@@ -1,6 +1,6 @@
 package com.eduvy.meeting.utils;
 
-import com.eduvy.chat.config.security.UserInfoDetails;
+import com.eduvy.meeting.config.security.UserInfoDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
