@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://chat-db:5432/${MEETING_DB_NAME}
+    username: ${MEETING_DB_USER}
+    password: ${MEETING_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

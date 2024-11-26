@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: meeting-service
+  datasource:
+    url: jdbc:postgresql://88.198.122.46:5438/meeting_db_dev
+    username: meeting_user_dev
+    password: meeting_pass_dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: ${MEETING_PORT:8088}
+
+auth0:
+  audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
+  issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
