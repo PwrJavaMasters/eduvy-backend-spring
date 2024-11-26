@@ -171,3 +171,4 @@ volumes:
   tutoring_db_data:
   chat_db_data:
   payment_db_data:
+  meeting_db_data:
