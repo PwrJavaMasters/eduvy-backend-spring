@@ -1,4 +1,4 @@
-package com.eduvy.chat.config.security;
+package com.eduvy.meeting.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,5 @@ public class SecurityConfiguration {
                         .permitAll().anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
-
     }
 }

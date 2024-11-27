@@ -12,7 +12,7 @@
     <artifactId>chat-service</artifactId>
 
     <properties>
-        <start-class>com.eduvy.chat.PaymentServiceApplication</start-class>
+        <start-class>com.eduvy.chat.ChatServiceApplication</start-class>
     </properties>
 
     <dependencies>
@@ -60,6 +60,10 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -68,7 +72,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.eduvy.user.UserServiceApplication</mainClass>
+                    <mainClass>com.eduvy.chat.ChatServiceApplication</mainClass>
                     <layout>JAR</layout>
                 </configuration>
                 <executions>

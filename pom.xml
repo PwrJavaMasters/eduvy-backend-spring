@@ -15,6 +15,7 @@
         <module>tutoring-service</module>
         <module>chat-service</module>
         <module>payment-service</module>
+        <module>meeting-service</module>
     </modules>
 
     <dependencyManagement>
