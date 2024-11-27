@@ -22,4 +22,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAppointmentsByStudentAndMonth(@Param("student") String student,
                                                         @Param("startOfMonth") LocalDate startOfMonth,
                                                         @Param("endOfMonth") LocalDate endOfMonth);
+
+    @Query("SELECT a FROM Appointment a WHERE a.tutorProfile = :tutorProfile AND a.day BETWEEN :startOfMonth AND :endOfMonth")
+    List<Appointment> findAppointmentsByTutorProfileAndMonth(@Param("tutorProfile") TutorProfile tutorProfile,
+                                                             @Param("startOfMonth") LocalDate startOfMonth,
+                                                             @Param("endOfMonth") LocalDate endOfMonth);
 }

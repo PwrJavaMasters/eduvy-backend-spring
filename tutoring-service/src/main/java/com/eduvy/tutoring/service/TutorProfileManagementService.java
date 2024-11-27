@@ -11,10 +11,4 @@ public interface TutorProfileManagementService {
     ResponseEntity<TutorProfileManagementResponse> getTutorProfile();
 
     ResponseEntity<TutorProfileManagementResponse> editTutorProfile(CreateTutorProfileRequest createTutorProfileRequest);
-
-//    ResponseEntity<TutorProfileResponse> addSubject(AddSubjectRequest addSubjectRequest);
-//
-//    ResponseEntity deleteSubject(DeleteSubjectRequest deleteSubjectRequest);
-//
-//    ResponseEntity<EditSubjectResponse> editSubject(EditSubjectRequest editSubjectRequest);
 }

@@ -190,6 +190,36 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         return ResponseEntity.ok(tutorAppointmentResponses);
     }
 
+    @Override
+    public ResponseEntity<List<TutorAppointmentResponse>> getTutorMonthAppointments(DayRequest dayRequest) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null){
+            System.err.println("TutorProfile not found, user: " + userMail);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<Appointment> appointments = getTutorAppointmentsByTutorProfileAndMonth(dayRequest.getDay(), tutorProfile);
+        if (appointments.isEmpty())
+            return ResponseEntity.ok(new ArrayList<>());
+
+        List<TutorAppointmentResponse> tutorAppointmentResponses = appointments.stream()
+                .map(this::mapAppointmentToTutorAppointmentResponse)
+                .toList();
+
+        return ResponseEntity.ok(tutorAppointmentResponses);
+    }
+
+    @Override
+    public List<Appointment> getTutorAppointmentsByTutorProfileAndMonth(LocalDate date, TutorProfile tutorProfile) {
+        LocalDate startOfMonth = date.withDayOfMonth(1);
+        LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+        return appointmentRepository.findAppointmentsByTutorProfileAndMonth(tutorProfile, startOfMonth, endOfMonth);
+    }
+
     private UserAppointmentResponse mapAppointmentToUserAppointmentResponse(Appointment appointment) {
         return new UserAppointmentResponse(
                 appointment.getDay(),
@@ -222,7 +252,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
 
-    public String generateOneTimePaymentLink(String userMail, Appointment appointment) {
+    private String generateOneTimePaymentLink(String userMail, Appointment appointment) {
         return paymentService.getPaymentUrl("todo"); //todo implement
     }
 }
