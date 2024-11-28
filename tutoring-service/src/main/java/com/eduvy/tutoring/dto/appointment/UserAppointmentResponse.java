@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserAppointmentResponse {
 
+    private String appointmentId;
     private LocalDate day;
     private Timestamp startDate;
     private Timestamp endDate;

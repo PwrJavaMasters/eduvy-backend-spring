@@ -92,4 +92,10 @@ public class TutorProfileController {
     public ResponseEntity<List<TutorAppointmentResponse>> getMonthAppointments(@RequestBody DayRequest getAvailabilityRequest) {
         return appointmentManagementService.getTutorMonthAppointments(getAvailabilityRequest);
     }
+
+    @GetMapping("/confirm-appointment/{meetingId}")
+    public ResponseEntity<Void> confirmAppointment(@PathVariable("meetingId") String meetingId) {
+        System.out.println(meetingId);
+        return appointmentManagementService.confirmAppointment(meetingId);
+    }
 }
