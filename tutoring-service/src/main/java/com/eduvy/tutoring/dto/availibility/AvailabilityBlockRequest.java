@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddAvailabilityBlockRequest {
+public class AvailabilityBlockRequest {
 
     private LocalDate day;
     private Timestamp startTime;

@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
+    List<Appointment> findAppointmentById(Long id);
+
     List<Appointment> findAppointmentsByStudentAndDay(String student, LocalDate day);
 
     List<Appointment> findAppointmentsByTutorProfileAndDay(TutorProfile tutorProfile, LocalDate day);
@@ -22,4 +24,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAppointmentsByStudentAndMonth(@Param("student") String student,
                                                         @Param("startOfMonth") LocalDate startOfMonth,
                                                         @Param("endOfMonth") LocalDate endOfMonth);
+
+    @Query("SELECT a FROM Appointment a WHERE a.tutorProfile = :tutorProfile AND a.day BETWEEN :startOfMonth AND :endOfMonth")
+    List<Appointment> findAppointmentsByTutorProfileAndMonth(@Param("tutorProfile") TutorProfile tutorProfile,
+                                                             @Param("startOfMonth") LocalDate startOfMonth,
+                                                             @Param("endOfMonth") LocalDate endOfMonth);
 }

@@ -2,10 +2,7 @@ package com.eduvy.tutoring.controller;
 
 
 import com.eduvy.tutoring.dto.appointment.TutorAppointmentResponse;
-import com.eduvy.tutoring.dto.availibility.AddAvailabilityBlockRequest;
-import com.eduvy.tutoring.dto.availibility.DayRequest;
-import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
-import com.eduvy.tutoring.dto.availibility.GetAvailabilityResponse;
+import com.eduvy.tutoring.dto.availibility.*;
 import com.eduvy.tutoring.dto.tutor.profile.CreateTutorProfileRequest;
 import com.eduvy.tutoring.dto.tutor.profile.TutorProfileManagementResponse;
 import com.eduvy.tutoring.service.AppointmentManagementService;
@@ -13,7 +10,6 @@ import com.eduvy.tutoring.service.TutorAvailabilityService;
 import com.eduvy.tutoring.service.TutorProfileManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,15 +47,22 @@ public class TutorProfileController {
     @PostMapping("/calendar/add-block")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER')")
-    public ResponseEntity<GetAvailabilityResponse> addAvailabilityBlock(@RequestBody AddAvailabilityBlockRequest addAvailabilityBlockRequest) {
-        return tutorAvailabilityService.addAvailabilityBlock(addAvailabilityBlockRequest);
+    public ResponseEntity<GetAvailabilityResponse> addAvailabilityBlock(@RequestBody AvailabilityBlockRequest availabilityBlockRequest) {
+        return tutorAvailabilityService.addAvailabilityBlock(availabilityBlockRequest);
     }
 
     @PostMapping("/calendar/add-block-list")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER')")
-    public ResponseEntity<Void> addAvailabilityBlock(@RequestBody List<AddAvailabilityBlockRequest> addAvailabilityBlockRequestList) {
-        return tutorAvailabilityService.addAvailabilityBlockList(addAvailabilityBlockRequestList);
+    public ResponseEntity<Void> addAvailabilityBlockList(@RequestBody List<AvailabilityBlockRequest> availabilityBlockRequestList) {
+        return tutorAvailabilityService.addAvailabilityBlockList(availabilityBlockRequestList);
+    }
+
+    @PostMapping("/calendar/delete-block-list")
+//    @SecurityRequirement(name = "bearerAuth")
+//    @PreAuthorize("hasAuthority('TEACHER')")
+    public ResponseEntity<Void> deleteAvailabilityBlock(@RequestBody List<AvailabilityBlockRequest> availabilityBlockRequestList) {
+        return tutorAvailabilityService.deleteAvailabilityBlockList(availabilityBlockRequestList);
     }
 
     @PostMapping("/calendar/get-day-availability")
@@ -72,7 +75,7 @@ public class TutorProfileController {
     @PostMapping("/calendar/get-availability-month")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER')")
-    public ResponseEntity<List<GetAvailabilityResponse>> getMonthAvailability(@RequestBody DayRequest getAvailabilityRequest) {
+    public ResponseEntity<GetMonthAvailabilityResponse> getMonthAvailability(@RequestBody DayRequest getAvailabilityRequest) {
         return tutorAvailabilityService.getMonthAvailability(getAvailabilityRequest);
     }
 
@@ -81,5 +84,18 @@ public class TutorProfileController {
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
     public ResponseEntity<List<TutorAppointmentResponse>> getAppointments(@RequestBody DayRequest getAvailabilityRequest) {
         return appointmentManagementService.getTutorAppointmentsByDay(getAvailabilityRequest);
+    }
+
+    @PostMapping("/get-appointments-month")
+//    @SecurityRequirement(name = "bearerAuth")
+//    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
+    public ResponseEntity<List<TutorAppointmentResponse>> getMonthAppointments(@RequestBody DayRequest getAvailabilityRequest) {
+        return appointmentManagementService.getTutorMonthAppointments(getAvailabilityRequest);
+    }
+
+    @GetMapping("/confirm-appointment/{meetingId}")
+    public ResponseEntity<Void> confirmAppointment(@PathVariable("meetingId") String meetingId) {
+        System.out.println(meetingId);
+        return appointmentManagementService.confirmAppointment(meetingId);
     }
 }

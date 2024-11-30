@@ -11,10 +11,9 @@ import com.eduvy.tutoring.model.TutorProfile;
 import com.eduvy.tutoring.model.utils.HoursBlock;
 import com.eduvy.tutoring.repository.AppointmentRepository;
 import com.eduvy.tutoring.repository.TutorAvailabilityRepository;
-import com.eduvy.tutoring.service.AppointmentManagementService;
-import com.eduvy.tutoring.service.PaymentService;
-import com.eduvy.tutoring.service.TutorProfileService;
-import com.eduvy.tutoring.service.UserService;
+import com.eduvy.tutoring.service.*;
+import com.eduvy.tutoring.utils.Utils;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +35,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     TutorProfileService tutorProfileService;
     PaymentService paymentService;
     UserService userService;
+    AppointmentService appointmentService;
 
     TutorAvailabilityRepository tutorAvailabilityRepository;
     AppointmentRepository appointmentRepository;
@@ -120,8 +120,31 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
     @Override
-    public ResponseEntity<ConfirmAppointmentResponse> confirmAppointment(ConfirmAppointmentRequest confirmAppointmentRequest) {
-        return null; //todo
+    @Transactional
+    public ResponseEntity<Void> confirmAppointment(String appointmentId) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (appointmentId == null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+
+        Appointment appointment = appointmentService.getAppointmentByEncodedId(appointmentId);
+        if (appointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        appointment.setIsConfirmed(true);
+        appointmentRepository.save(appointment);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -190,8 +213,39 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         return ResponseEntity.ok(tutorAppointmentResponses);
     }
 
+    @Override
+    public ResponseEntity<List<TutorAppointmentResponse>> getTutorMonthAppointments(DayRequest dayRequest) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null){
+            System.err.println("TutorProfile not found, user: " + userMail);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        List<Appointment> appointments = getTutorAppointmentsByTutorProfileAndMonth(dayRequest.getDay(), tutorProfile);
+        if (appointments.isEmpty())
+            return ResponseEntity.ok(new ArrayList<>());
+
+        List<TutorAppointmentResponse> tutorAppointmentResponses = appointments.stream()
+                .map(this::mapAppointmentToTutorAppointmentResponse)
+                .toList();
+
+        return ResponseEntity.ok(tutorAppointmentResponses);
+    }
+
+    @Override
+    public List<Appointment> getTutorAppointmentsByTutorProfileAndMonth(LocalDate date, TutorProfile tutorProfile) {
+        LocalDate startOfMonth = date.withDayOfMonth(1);
+        LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+        return appointmentRepository.findAppointmentsByTutorProfileAndMonth(tutorProfile, startOfMonth, endOfMonth);
+    }
+
     private UserAppointmentResponse mapAppointmentToUserAppointmentResponse(Appointment appointment) {
         return new UserAppointmentResponse(
+                Utils.encodeAppointmentId(appointment),
                 appointment.getDay(),
                 appointment.getStartDate(),
                 appointment.getEndDate(),
@@ -208,6 +262,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
 
     private TutorAppointmentResponse mapAppointmentToTutorAppointmentResponse(Appointment appointment) {
         return new TutorAppointmentResponse(
+                Utils.encodeAppointmentId(appointment),
                 appointment.getDay(),
                 appointment.getStartDate(),
                 appointment.getEndDate(),
@@ -222,7 +277,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
 
-    public String generateOneTimePaymentLink(String userMail, Appointment appointment) {
+    private String generateOneTimePaymentLink(String userMail, Appointment appointment) {
         return paymentService.getPaymentUrl("todo"); //todo implement
     }
 }

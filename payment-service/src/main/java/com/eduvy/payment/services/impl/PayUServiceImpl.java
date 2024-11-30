@@ -48,6 +48,6 @@ public class PayUServiceImpl implements PayUService {
 
     public static void main(String[] args) {
         PayUService payUService = new PayUServiceImpl();
-        System.out.println(payUService.getAccessToken());
+        System.out.println("Access token for PayU: " + payUService.getAccessToken());
     }
 }
