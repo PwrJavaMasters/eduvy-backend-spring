@@ -1,6 +1,7 @@
 package com.eduvy.tutoring.service;
 
 import com.eduvy.tutoring.dto.tutor.profile.CreateTutorProfileRequest;
+import com.eduvy.tutoring.dto.tutor.profile.EditUserUpdateRequest;
 import com.eduvy.tutoring.dto.tutor.profile.TutorProfileManagementResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -11,4 +12,6 @@ public interface TutorProfileManagementService {
     ResponseEntity<TutorProfileManagementResponse> getTutorProfile();
 
     ResponseEntity<TutorProfileManagementResponse> editTutorProfile(CreateTutorProfileRequest createTutorProfileRequest);
+
+    ResponseEntity<Void> editUserUpdate(EditUserUpdateRequest editUserUpdate);
 }
