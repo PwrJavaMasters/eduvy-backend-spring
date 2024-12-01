@@ -11,22 +11,26 @@ const logout = document.querySelector('#logout');
 
 let stompClient = null;
 let nickname = null;
-let fullname = null;
+let email = null;
 let selectedUserId = null;
 let numberOfMessages = 0;
 
 function connect(event) {
     nickname = document.querySelector('#nickname').value.trim();
-    fullname = document.querySelector('#fullname').value.trim();
+    email = document.querySelector('#email').value.trim();
 
-    if (nickname && fullname) {
+    if (nickname && email) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, onConnected, onError);
+        const headers = {
+            Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkxZTDhRbXdRbkN5TFp0eXdsemJIRCJ9.eyJ1c2VyX3JvbGVzIjpbInN0dWRlbnQiLCJ0dXRvciJdLCJuaWNrbmFtZSI6IndvanRlay5rb3J5cyIsIm5hbWUiOiJ3b2p0ZWsua29yeXNAd3AucGwiLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNGE0Njc1OGU1ZTU5YjMzODE2ZTU1MTc1MzYzZDI3ZGI_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ3by5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0xMi0wMVQxMzozMzo0MC4yNTRaIiwiZW1haWwiOiJ3b2p0ZWsua29yeXNAd3AucGwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LWdrbmlkazJxMWZvZTR0eGUudXMuYXV0aDAuY29tLyIsImF1ZCI6IkJoNnZ2U2JRbFd2T0d6aUE2Y3VLcXBaZFdJc1UzTEJ0IiwiaWF0IjoxNzMzMDYwMDIxLCJleHAiOjE3MzMwOTYwMjEsInN1YiI6ImF1dGgwfDY3MzI2NTFmZDMxNzNiODliY2JkZGU2YSIsInNpZCI6ImlKdEM5NGlkaHhmOWtCMFU2WVozRlVGWDFXOEk0YnFIIiwibm9uY2UiOiJiVVp2ZUY5eFdUaCtjME15TkhWbmJuVklUV1JSUlRaUlUyRXpiRmt3YjNSbVVGWk9lakpMYmxVMFRRPT0ifQ.Wuu_4wllA_WsOctlBRGsdyGji2v5rXkofr9fYaQwqbvzppGMd5ZwgcUtOe-r-aHgPh_zXPFdEuDn54-8s0UxEfABZcCr1qZ08uTZ60tqpsKTqTQjuxdTDpr_IQl0y1hZXWeaV8b48FeELkC82fGfVImkE3391kf7-tNBaRjkGCTDHWIraAgjMysCubiV4nNx2586ld_oz6FBDZVzLQrraNgbsNEc4mjvqy0XfaGLde6HHzqcbKzdX1VdGygdllqJgI_21brD9SeGnQeIGKuhIpH3FvIOY2dWGfEvMw1ynTweddcD2V1_1ngu-oKOBQ4Z_lt0bEHfr9RsJYkIKNRZGw`
+        };
+
+        stompClient.connect(headers, onConnected, onError);
     }
     event.preventDefault();
 }
@@ -39,9 +43,9 @@ function onConnected() {
     // register the connected user
     stompClient.send("/app/user.addUser",
         {},
-        JSON.stringify({nickName: nickname, fullName: fullname, status: 'ONLINE'})
+        JSON.stringify({nickName: nickname, email: email, status: 'ONLINE'})
     );
-    document.querySelector('#connected-user-fullname').textContent = fullname;
+    document.querySelector('#connected-user-email').textContent = email;
     findAndDisplayConnectedUsers().then();
 }
 
@@ -63,6 +67,8 @@ async function findAndDisplayConnectedUsers() {
     });
 }
 
+setInterval(findAndDisplayConnectedUsers, 1000);
+
 function appendUserElement(user, connectedUsersList) {
     const listItem = document.createElement('li');
     listItem.classList.add('user-item');
@@ -70,10 +76,10 @@ function appendUserElement(user, connectedUsersList) {
 
     const userImage = document.createElement('img');
     userImage.src = '../image/user_icon.png';
-    userImage.alt = user.fullName;
+    userImage.alt = user.email;
 
     const usernameSpan = document.createElement('span');
-    usernameSpan.textContent = user.fullName;
+    usernameSpan.textContent = user.email;
 
     const receivedMsgs = document.createElement('span');
     receivedMsgs.textContent = '';
@@ -189,7 +195,7 @@ async function onMessageReceived(payload) {
 function onLogout() {
     stompClient.send("/app/user.disconnectUser",
         {},
-        JSON.stringify({nickName: nickname, fullName: fullname, status: 'OFFLINE'})
+        JSON.stringify({nickName: nickname, email: email, status: 'OFFLINE'})
     );
     window.location.reload();
 }

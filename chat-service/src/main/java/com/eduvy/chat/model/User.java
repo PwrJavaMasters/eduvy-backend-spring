@@ -20,7 +20,7 @@ public class User {
 
     private String nickName;
 
-    private String fullName;
+    private String email;
 
     @Enumerated(EnumType.STRING) // Mapping UserStatus as an enum in the database
     private UserStatus status;
