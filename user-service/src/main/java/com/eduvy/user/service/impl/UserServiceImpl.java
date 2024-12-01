@@ -6,7 +6,16 @@ import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.UserDetailsRepository;
 import com.eduvy.user.service.UserService;
+import com.google.gson.Gson;
 import jakarta.transaction.Transactional;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +23,11 @@ import org.springframework.stereotype.Service;
 
 import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static com.eduvy.user.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
 
@@ -23,6 +37,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
+    private final CloseableHttpClient httpClient = HttpClients.createDefault();
+    private final Gson gson = new Gson();
 
     @Override
     public UserDetails getUserFromContext() {
@@ -137,11 +153,14 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(422).build();
         }
 
+        boolean updateTutoringService = editUserUpdateInTutoringService(editUserDetailsRequest, userDetails);
+        if (!updateTutoringService) {
+            return ResponseEntity.status(422).build(); //todo 422 or 500???
+        }
+
         userDetails.setFirstName(editUserDetailsRequest.firstName);
         userDetails.setLastName(editUserDetailsRequest.lastName);
         userDetailsRepository.save(userDetails);
-
-        //todo check co z tutor profile?
 
         return ResponseEntity.ok().build();
     }
@@ -153,6 +172,26 @@ public class UserServiceImpl implements UserService {
                 editUserDetailsRequest.lastName
         );
 
-        return true;
+        String url = "http://localhost:8085/internal/edit-user-update";
+
+        String jsonPayload = gson.toJson(editUserUpdateRequest);
+
+        HttpPost request = new HttpPost(url);
+        request.addHeader("Content-Type", "application/json");
+
+        request.setEntity(new StringEntity(jsonPayload, StandardCharsets.UTF_8));
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(request)) {
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.printf("Request url: %s | Status code: %d%n", url, statusCode);
+
+            return statusCode == 200;
+
+        } catch (IOException e) {
+            System.err.println("Error during HTTP request: " + e.getMessage());
+            return false;
+        }
     }
 }

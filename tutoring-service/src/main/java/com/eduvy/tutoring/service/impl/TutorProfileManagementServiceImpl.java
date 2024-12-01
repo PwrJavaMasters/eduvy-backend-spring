@@ -131,7 +131,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     public ResponseEntity<Void> editUserUpdate(EditUserUpdateRequest editUserUpdateRequest) {
         TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(editUserUpdateRequest.getEmail());
         if (tutorProfile == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().build();
         }
 
         tutorProfile.setFirstName(editUserUpdateRequest.getFirstName());
