@@ -17,4 +17,12 @@ auth0:
   audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
   issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
 
+user-service:
+  url: localhost:8083
+
+meeting-service:
+  url: localhost:8088
+
+
+
 

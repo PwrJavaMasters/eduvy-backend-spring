@@ -2,9 +2,11 @@ package com.eduvy.tutoring.service.impl;
 
 import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.service.UserService;
+import com.eduvy.tutoring.utils.ServicesURL;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import lombok.AllArgsConstructor;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,8 +21,10 @@ import java.time.format.DateTimeFormatter;
 import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final ServicesURL servicesURL;
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
@@ -30,7 +34,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails getUserDetails() {
         String userMail = getCurrentUserMailFromContext();
-        String url = "http://user-service:8083/internal/user-details/" + userMail;
+
+
+        String url = "http://" + servicesURL.getUserServiceUrl() + "/internal/user-details/" + userMail;
 
         HttpGet request = new HttpGet(url);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
