@@ -38,6 +38,11 @@ public class TutorController {
         return tutorsService.getAllTutorsFiltered(getTutorsFilteredRequest);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<AllTutorResponse>> searchTutorProfilesFiltered(@RequestParam("phrase") String phrase) {
+        return tutorsService.searchTutors(phrase);
+    }
+
     @GetMapping("/subjects")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")

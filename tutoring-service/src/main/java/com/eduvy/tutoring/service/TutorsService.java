@@ -11,6 +11,8 @@ public interface TutorsService {
 
     ResponseEntity<List<AllTutorResponse>> getAllTutorsFiltered(GetTutorsFilteredRequest getTutorsFilteredRequest);
 
+    ResponseEntity<List<AllTutorResponse>> searchTutors(String phrase);
+
     ResponseEntity<List<AllSubjectsResponse>> getAllSubjects();
 
     ResponseEntity<List<TutorBySubjectResponse>> getTutorsBySubjects(String subject);

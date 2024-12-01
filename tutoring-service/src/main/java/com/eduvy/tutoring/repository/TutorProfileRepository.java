@@ -28,4 +28,11 @@ public interface TutorProfileRepository extends JpaRepository<TutorProfile, Long
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice
     );
+
+    @Query("SELECT tp FROM TutorProfile tp LEFT JOIN tp.subjects s " +
+            "WHERE LOWER(tp.firstName) LIKE LOWER(CONCAT('%', :phrase, '%')) " +
+            "OR LOWER(tp.lastName) LIKE LOWER(CONCAT('%', :phrase, '%')) " +
+            "OR LOWER(tp.description) LIKE LOWER(CONCAT('%', :phrase, '%')) " +
+            "OR LOWER(s.subject) LIKE LOWER(CONCAT('%', :phrase, '%'))")
+    List<TutorProfile> searchTutorsByPhrase(@Param("phrase") String phrase);
 }

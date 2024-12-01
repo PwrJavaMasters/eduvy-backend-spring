@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,21 @@ public class TutorsServiceImpl implements TutorsService {
         List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
 
         return ResponseEntity.ok(tutorListingResponses);
+    }
+
+    @Override
+    public ResponseEntity<List<AllTutorResponse>> searchTutors(String phrase) {
+        List<TutorProfile> tutorProfiles = tutorProfileRepository.searchTutorsByPhrase(phrase.trim());
+
+        if (tutorProfiles.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        List<AllTutorResponse> responses = tutorProfiles.stream()
+                .map(this::mapTutorProfileToAllTutorResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
     }
 
     private void removeOwnTutorProfileFromResponse(List<TutorProfile> tutorProfiles) {
