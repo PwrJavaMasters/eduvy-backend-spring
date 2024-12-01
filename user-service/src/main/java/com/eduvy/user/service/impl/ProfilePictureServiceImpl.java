@@ -58,6 +58,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<byte[]> getProfilePicture() {
         UserDetails userDetails = userService.getUserFromContext();
         if(userDetails == null) {

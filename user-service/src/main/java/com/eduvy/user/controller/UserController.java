@@ -6,6 +6,7 @@ import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
 import com.eduvy.user.service.ProfilePictureService;
 import com.eduvy.user.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,8 +48,8 @@ public class UserController {
         return userService.editUserDetails(editUserDetailsRequest);
     }
 
-    @PostMapping("/upload-profile-picture")
-    public ResponseEntity<Void> uploadProfilePicture(@RequestBody MultipartFile file) {
+    @PostMapping(value = "/upload-profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
         return profilePictureService.uploadProfilePicture(file);
     }
 
