@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
     public UserDetails getUserDetails() {
         String userMail = getCurrentUserMailFromContext();
 
-
         String url = "http://" + servicesURL.getUserServiceUrl() + "/internal/user-details/" + userMail;
 
         HttpGet request = new HttpGet(url);

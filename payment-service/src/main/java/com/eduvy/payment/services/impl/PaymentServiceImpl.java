@@ -1,25 +1,27 @@
 package com.eduvy.payment.services.impl;
 
 import com.eduvy.payment.dto.OrderRequest;
+import com.eduvy.payment.dto.PayUCreateOrderResponse;
+import com.eduvy.payment.dto.PayUWebhook;
 import com.eduvy.payment.services.PayUService;
 import com.eduvy.payment.services.PaymentService;
+import com.google.gson.Gson;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-//    @Value("${payu.pos_id}")
-    private String clientId = "300746";
+    private String merchantPosId = "486591";
 
-//    @Value("${payu.order_create_endpoint}")
     private String orderCreateEndpoint = "https://secure.snd.payu.com/api/v2_1/orders";
 
     @Autowired
@@ -29,51 +31,86 @@ public class PaymentServiceImpl implements PaymentService {
         this.payUService = payUService;
     }
 
+    CloseableHttpClient httpClient = HttpClients.createDefault();
+    Gson gson = new Gson();
+
     @Override
     public String createOrder(OrderRequest orderRequest) {
         String accessToken = payUService.getAccessToken();
+        System.out.println("Access Token: " + accessToken);
 
-        RestTemplate restTemplate = new RestTemplate();
+        int amount = orderRequest.getTotalAmount() * 100; //konwersja do groszy
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-Type", "application/json");
+        try {
+            // Prepare the HTTP POST request
+            HttpPost httpPost = new HttpPost(orderCreateEndpoint);
+            httpPost.setHeader("Authorization", "Bearer " + accessToken);
+            httpPost.setHeader("Content-Type", "application/json");
 
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
-        payload.put("customerIp", "127.0.0.1");
-        payload.put("merchantPosId", clientId);
-        payload.put("description", "Zapłata za spotkanie");
-        payload.put("currencyCode", "PLN");
-        payload.put("totalAmount", orderRequest.getTotalAmount());
-        payload.put("extOrderId", orderRequest.getExtOrderId());
+            // Prepare payload
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
+            payload.put("customerIp", "127.0.0.1");
+            payload.put("merchantPosId", merchantPosId);
+            payload.put("description", "Payment for tutoring.");
+            payload.put("currencyCode", "PLN");
+            payload.put("totalAmount", amount);
+            payload.put("extOrderId", orderRequest.getExtOrderId());
 
-        // Dodaj informacje o produktach
-        List<Map<String, Object>> products = new ArrayList<>();
-        Map<String, Object> product = new HashMap<>();
-        product.put("name", "Korepetycje online");
-        product.put("unitPrice", orderRequest.getTotalAmount());
-        product.put("quantity", "1");
-        products.add(product);
-        payload.put("products", products);
+            // Add product details
+            List<Map<String, Object>> products = new ArrayList<>();
+            Map<String, Object> product = new HashMap<>();
+            product.put("name", "Online tutoring");
+            product.put("unitPrice", amount);
+            product.put("quantity", 1);
+            products.add(product);
+            payload.put("products", products);
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
+            // Set JSON payload
+            String jsonPayload = gson.toJson(payload);
+            StringEntity entity = new StringEntity(jsonPayload);
+            httpPost.setEntity(entity);
 
-        ResponseEntity<Map> response = restTemplate.postForEntity(orderCreateEndpoint, request, Map.class);
+            // Execute request and process response
+            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                String responseBody = EntityUtils.toString(response.getEntity());
 
-        String redirectUri = ((Map<String, String>) response.getBody().get("redirectUri")).get("redirectUri");
+                System.out.println("status code: " +statusCode);
+                System.out.println("body:" + responseBody);
 
-        return redirectUri;
+                if (statusCode != 200 && statusCode != 302) {
+                    return null;
+                }
+
+                PayUCreateOrderResponse payUResponse = gson.fromJson(responseBody, PayUCreateOrderResponse.class);
+
+
+                return payUResponse.getRedirectUri();
+            }
+
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            return null;
+        }
+    }
+
+    @Override
+    public String processPaymentNotify(PayUWebhook payUWebhook) {
+        System.out.println(payUWebhook);
+        return "";
     }
 
 
     public static void main(String[] args) {
         OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setExtOrderId("1");
+        orderRequest.setExtOrderId("7");
+        orderRequest.setTotalAmount(10000);
 
         PayUService payUService = new PayUServiceImpl();
         PaymentService paymentService = new PaymentServiceImpl(payUService);
-        System.out.printf(paymentService.createOrder(orderRequest));
+        String link = paymentService.createOrder(orderRequest);
+        System.out.printf("Link: %s\n", link);
     }
 
 }

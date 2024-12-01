@@ -27,4 +27,6 @@ public class AppointmentPayment {
     private String tutor;
     private String student;
     private String appointment;
+
+    private String status;
 }
