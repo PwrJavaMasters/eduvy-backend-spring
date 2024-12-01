@@ -2,6 +2,7 @@ package com.eduvy.payment.services.impl;
 
 import com.eduvy.payment.dto.OrderRequest;
 import com.eduvy.payment.dto.PayUCreateOrderResponse;
+import com.eduvy.payment.dto.PayUWebhook;
 import com.eduvy.payment.services.PayUService;
 import com.eduvy.payment.services.PaymentService;
 import com.google.gson.Gson;
@@ -38,6 +39,8 @@ public class PaymentServiceImpl implements PaymentService {
         String accessToken = payUService.getAccessToken();
         System.out.println("Access Token: " + accessToken);
 
+        int amount = orderRequest.getTotalAmount() * 100; //konwersja do groszy
+
         try {
             // Prepare the HTTP POST request
             HttpPost httpPost = new HttpPost(orderCreateEndpoint);
@@ -46,19 +49,19 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Prepare payload
             Map<String, Object> payload = new HashMap<>();
-            payload.put("notifyUrl", "https://webhook.site/6651d5ea-b82f-40c4-9a26-51c78d32bebe");
+            payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
             payload.put("customerIp", "127.0.0.1");
             payload.put("merchantPosId", merchantPosId);
-            payload.put("description", "Zapłata za spotkanie");
+            payload.put("description", "Payment for tutoring.");
             payload.put("currencyCode", "PLN");
-            payload.put("totalAmount", orderRequest.getTotalAmount());
+            payload.put("totalAmount", amount);
             payload.put("extOrderId", orderRequest.getExtOrderId());
 
             // Add product details
             List<Map<String, Object>> products = new ArrayList<>();
             Map<String, Object> product = new HashMap<>();
-            product.put("name", "Korepetycje online");
-            product.put("unitPrice", orderRequest.getTotalAmount());
+            product.put("name", "Online tutoring");
+            product.put("unitPrice", amount);
             product.put("quantity", 1);
             products.add(product);
             payload.put("products", products);
@@ -90,6 +93,12 @@ public class PaymentServiceImpl implements PaymentService {
             System.out.println(Arrays.toString(e.getStackTrace()));
             return null;
         }
+    }
+
+    @Override
+    public String processPaymentNotify(PayUWebhook payUWebhook) {
+        System.out.println(payUWebhook);
+        return "";
     }
 
 
