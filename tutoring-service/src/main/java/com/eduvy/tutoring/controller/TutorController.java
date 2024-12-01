@@ -5,10 +5,7 @@ import com.eduvy.tutoring.dto.appointment.BookAppointmentRequest;
 import com.eduvy.tutoring.dto.appointment.BookAppointmentResponse;
 import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityResponse;
-import com.eduvy.tutoring.dto.tutor.get.AllSubjectsResponse;
-import com.eduvy.tutoring.dto.tutor.get.AllTutorResponse;
-import com.eduvy.tutoring.dto.tutor.get.GetTutorProfileResponse;
-import com.eduvy.tutoring.dto.tutor.get.TutorBySubjectResponse;
+import com.eduvy.tutoring.dto.tutor.get.*;
 import com.eduvy.tutoring.service.AppointmentManagementService;
 import com.eduvy.tutoring.service.TutorAvailabilityService;
 import com.eduvy.tutoring.service.TutorsService;
@@ -32,6 +29,13 @@ public class TutorController {
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
     public ResponseEntity<List<AllTutorResponse>> getAllTutorProfiles() {
         return tutorsService.getAllTutors();
+    }
+
+    @PostMapping("/all-filtered")
+//    @SecurityRequirement(name = "bearerAuth")
+//    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")
+    public ResponseEntity<List<AllTutorResponse>> getAllTutorProfilesFiltered(@RequestBody GetTutorsFilteredRequest getTutorsFilteredRequest) {
+        return tutorsService.getAllTutorsFiltered(getTutorsFilteredRequest);
     }
 
     @GetMapping("/subjects")

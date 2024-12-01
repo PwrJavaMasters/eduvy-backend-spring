@@ -1,7 +1,6 @@
 package com.eduvy.tutoring.service.impl;
 
 
-import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.TutorProfile;
 import com.eduvy.tutoring.model.utils.Subject;
 import com.eduvy.tutoring.model.utils.SubjectData;

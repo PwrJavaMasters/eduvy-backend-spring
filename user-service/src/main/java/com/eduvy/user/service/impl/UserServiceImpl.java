@@ -1,11 +1,14 @@
 package com.eduvy.user.service.impl;
 
+import com.eduvy.user.dto.tutor.profile.EditUserUpdateRequest;
+import com.eduvy.user.dto.user.details.EditUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.UserDetailsRepository;
 import com.eduvy.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -118,5 +121,38 @@ public class UserServiceImpl implements UserService {
         userDetailsRepository.save(userData);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Void> editUserDetails(EditUserDetailsRequest editUserDetailsRequest) {
+        UserDetails userDetails = getUserFromContext();
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (editUserDetailsRequest.firstName == null ||
+            editUserDetailsRequest.lastName == null) {
+
+            return ResponseEntity.status(422).build();
+        }
+
+        userDetails.setFirstName(editUserDetailsRequest.firstName);
+        userDetails.setLastName(editUserDetailsRequest.lastName);
+        userDetailsRepository.save(userDetails);
+
+        //todo check co z tutor profile?
+
+        return ResponseEntity.ok().build();
+    }
+
+    private boolean editUserUpdateInTutoringService(EditUserDetailsRequest editUserDetailsRequest, UserDetails userDetails) {
+        EditUserUpdateRequest editUserUpdateRequest = new EditUserUpdateRequest(
+                userDetails.getEmail(),
+                editUserDetailsRequest.firstName,
+                editUserDetailsRequest.lastName
+        );
+
+        return true;
     }
 }

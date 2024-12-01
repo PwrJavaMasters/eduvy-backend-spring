@@ -1,6 +1,7 @@
 package com.eduvy.user.service;
 
 
+import com.eduvy.user.dto.user.details.EditUserDetailsRequest;
 import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
@@ -19,6 +20,8 @@ public interface UserService {
     ResponseEntity<UserDetailsResponse> getUserDetailsByMail(String mail);
 
     ResponseEntity<Void> fillUserDetails(FillUserDetailsRequest fillUserDetailsRequest);
+
+    ResponseEntity<Void> editUserDetails(EditUserDetailsRequest editUserDetailsRequest);
 }
 
 

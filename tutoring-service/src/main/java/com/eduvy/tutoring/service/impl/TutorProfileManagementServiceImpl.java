@@ -2,6 +2,7 @@ package com.eduvy.tutoring.service.impl;
 
 
 import com.eduvy.tutoring.dto.tutor.profile.CreateTutorProfileRequest;
+import com.eduvy.tutoring.dto.tutor.profile.EditUserUpdateRequest;
 import com.eduvy.tutoring.dto.tutor.profile.TutorProfileManagementResponse;
 import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.TutorProfile;
@@ -122,5 +123,22 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
         );
 
         return ResponseEntity.ok(response);
+    }
+
+
+    @Override
+    @Transactional
+    public ResponseEntity<Void> editUserUpdate(EditUserUpdateRequest editUserUpdateRequest) {
+        TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(editUserUpdateRequest.getEmail());
+        if (tutorProfile == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        tutorProfile.setFirstName(editUserUpdateRequest.getFirstName());
+        tutorProfile.setFirstName(editUserUpdateRequest.getFirstName());
+
+        tutorProfileRepository.save(tutorProfile);
+
+        return ResponseEntity.ok().build();
     }
 }

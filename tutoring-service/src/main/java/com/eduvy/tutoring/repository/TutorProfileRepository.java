@@ -18,4 +18,14 @@ public interface TutorProfileRepository extends JpaRepository<TutorProfile, Long
 
     @Query("SELECT tp FROM TutorProfile tp JOIN tp.subjects s WHERE s.subject = :subject")
     List<TutorProfile> findTutorProfilesBySubject(@Param("subject") Subject subject);
+
+    @Query("SELECT tp FROM TutorProfile tp JOIN tp.subjects s " +
+            "WHERE (:subject IS NULL OR s.subject = :subject) " +
+            "AND (:minPrice IS NULL OR s.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR s.price <= :maxPrice)")
+    List<TutorProfile> findFilteredTutors(
+            @Param("subject") Subject subject,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice
+    );
 }

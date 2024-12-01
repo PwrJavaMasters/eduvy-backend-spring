@@ -1,9 +1,6 @@
 package com.eduvy.tutoring.service.impl;
 
-import com.eduvy.tutoring.dto.tutor.get.AllSubjectsResponse;
-import com.eduvy.tutoring.dto.tutor.get.AllTutorResponse;
-import com.eduvy.tutoring.dto.tutor.get.GetTutorProfileResponse;
-import com.eduvy.tutoring.dto.tutor.get.TutorBySubjectResponse;
+import com.eduvy.tutoring.dto.tutor.get.*;
 import com.eduvy.tutoring.model.TutorProfile;
 import com.eduvy.tutoring.model.utils.Subject;
 import com.eduvy.tutoring.model.utils.SubjectData;
@@ -21,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUserMailFromContext;
+
 @Service
 @AllArgsConstructor
 public class TutorsServiceImpl implements TutorsService {
@@ -33,11 +32,48 @@ public class TutorsServiceImpl implements TutorsService {
     @Override
     public ResponseEntity<List<AllTutorResponse>> getAllTutors() {
         List<TutorProfile> tutorProfiles = tutorProfileRepository.findAll();
+        removeOwnTutorProfileFromResponse(tutorProfiles);
 
         List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
 
         return ResponseEntity.ok(tutorListingResponses);
     }
+
+    @Override
+    public ResponseEntity<List<AllTutorResponse>> getAllTutorsFiltered(GetTutorsFilteredRequest getTutorsFilteredRequest) {
+        String subjectString = getTutorsFilteredRequest.getSubject();
+        Double minPrice = getTutorsFilteredRequest.getMinPrice();
+        Double maxPrice = getTutorsFilteredRequest.getMaxPrice();
+
+        Subject subject = null;
+        if (subjectString != null && !subjectString.isBlank()) {
+            subject = Subject.fromString(subjectString.toUpperCase());
+        }
+
+        if (minPrice != null && minPrice == 0) {
+            minPrice = null;
+        }
+        if (maxPrice != null && maxPrice == 0) {
+            maxPrice = null;
+        }
+
+        List<TutorProfile> tutorProfiles = tutorProfileRepository.findFilteredTutors(subject, minPrice, maxPrice);
+        removeOwnTutorProfileFromResponse(tutorProfiles);
+
+        List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
+
+        return ResponseEntity.ok(tutorListingResponses);
+    }
+
+    private void removeOwnTutorProfileFromResponse(List<TutorProfile> tutorProfiles) {
+        String userMail = getCurrentUserMailFromContext();
+
+        TutorProfile tutorProfile = tutorProfileRepository.findTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null) return;
+
+        tutorProfiles.removeIf(tp -> tp.getId().equals(tutorProfile.getId()));
+    }
+
 
     private AllTutorResponse mapTutorProfileToAllTutorResponse(TutorProfile tutorProfile) {
         return new AllTutorResponse(
@@ -48,6 +84,7 @@ public class TutorsServiceImpl implements TutorsService {
                 tutorProfileService.getReviewNumber(tutorProfile),
                 tutorProfileService.getTutorProfileAvgRating(tutorProfile),
                 tutorProfile.getAllSubjects(),
+                tutorProfile.getDescription(),
                 Utils.encodeTutorProfileId(tutorProfile)
         );
     }

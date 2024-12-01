@@ -21,5 +21,6 @@ public class AllTutorResponse {
     Integer reviewsNumber;
     Double rating;
     List<String> subjects;
+    String description;
     String tutorId;
 }

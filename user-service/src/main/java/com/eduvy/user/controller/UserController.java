@@ -1,5 +1,6 @@
 package com.eduvy.user.controller;
 
+import com.eduvy.user.dto.user.details.EditUserDetailsRequest;
 import com.eduvy.user.dto.user.details.FillUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.dto.user.details.UserDetailsResponse;
@@ -35,5 +36,10 @@ public class UserController {
     @PostMapping("/user-details")
     public ResponseEntity<Void> fillUserDetails(@RequestBody FillUserDetailsRequest fillUserDetailsRequest) {
         return userService.fillUserDetails(fillUserDetailsRequest);
+    }
+
+    @PostMapping("/edit-user-details")
+    public ResponseEntity<Void> editUserDetails(@RequestBody EditUserDetailsRequest editUserDetailsRequest) {
+        return userService.editUserDetails(editUserDetailsRequest);
     }
 }
