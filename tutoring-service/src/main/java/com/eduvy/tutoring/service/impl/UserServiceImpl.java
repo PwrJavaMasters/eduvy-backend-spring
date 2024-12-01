@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails getUserDetails() {
         String userMail = getCurrentUserMailFromContext();
-        String url = "http://localhost:8083/internal/user-details/" + userMail;
+        String url = "http://user-service:8083/internal/user-details/" + userMail;
 
         HttpGet request = new HttpGet(url);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
