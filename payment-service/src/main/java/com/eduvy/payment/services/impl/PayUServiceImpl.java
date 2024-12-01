@@ -17,13 +17,10 @@ import java.util.Map;
 @Service
 public class PayUServiceImpl implements PayUService {
 
-//    @Value("${payu.client_id}")
-    private String clientId = "300746";
+    private String clientId = "486591";
 
-//    @Value("${payu.client_secret}")
-    private String clientSecret = "2ee86a66e5d97e3fadc400c9f19b065d";
+    private String clientSecret = "05f6c7967bfe5eeec5ac68d226418321";
 
-//    @Value("${payu.oauth_endpoint}")
     private String oauthEndpoint = "https://secure.snd.payu.com/pl/standard/user/oauth/authorize";
 
     public String getAccessToken() {

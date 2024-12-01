@@ -135,7 +135,7 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
         }
 
         tutorProfile.setFirstName(editUserUpdateRequest.getFirstName());
-        tutorProfile.setFirstName(editUserUpdateRequest.getFirstName());
+        tutorProfile.setLastName(editUserUpdateRequest.getLastName());
 
         tutorProfileRepository.save(tutorProfile);
 

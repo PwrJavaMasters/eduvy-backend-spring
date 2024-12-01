@@ -37,12 +37,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
     private final Gson gson = new Gson();
 
     @Override
     public UserDetails getUserFromContext() {
-        return null;
+        String mail = getCurrentUserMailFromContext();
+        return userDetailsRepository.findByEmail(mail);
     }
 
     public ResponseEntity<UserDetailsCheckResponse> userDetailsFilled() {
@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity<UserDetailsResponse> getUserDetails() {
-
         String email = getCurrentUserMailFromContext();
 
         if (email == null) {
@@ -172,7 +171,9 @@ public class UserServiceImpl implements UserService {
                 editUserDetailsRequest.lastName
         );
 
-        String url = "http://localhost:8085/internal/edit-user-update";
+        //todo add variable to config
+        String url = "http://tutoring-service:8085/internal/edit-user-update";
+//        String url = "http://localhost:8085/internal/edit-user-update";
 
         String jsonPayload = gson.toJson(editUserUpdateRequest);
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -16,10 +17,8 @@ import java.util.*;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-//    @Value("${payu.pos_id}")
-    private String clientId = "300746";
+    private String merchantPosId = "486591";
 
-//    @Value("${payu.order_create_endpoint}")
     private String orderCreateEndpoint = "https://secure.snd.payu.com/api/v2_1/orders";
 
     @Autowired
@@ -32,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public String createOrder(OrderRequest orderRequest) {
         String accessToken = payUService.getAccessToken();
+        System.out.println("Access Token: " + accessToken);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -42,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         Map<String, Object> payload = new HashMap<>();
         payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
         payload.put("customerIp", "127.0.0.1");
-        payload.put("merchantPosId", clientId);
+        payload.put("merchantPosId", merchantPosId);
         payload.put("description", "Zapłata za spotkanie");
         payload.put("currencyCode", "PLN");
         payload.put("totalAmount", orderRequest.getTotalAmount());
@@ -52,8 +52,8 @@ public class PaymentServiceImpl implements PaymentService {
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product = new HashMap<>();
         product.put("name", "Korepetycje online");
-        product.put("unitPrice", orderRequest.getTotalAmount());
-        product.put("quantity", "1");
+        product.put("unitPrice", orderRequest.getTotalAmount()); // Upewnij się, że to liczba
+        product.put("quantity", 1); // Liczba całkowita
         products.add(product);
         payload.put("products", products);
 
@@ -61,9 +61,12 @@ public class PaymentServiceImpl implements PaymentService {
 
         ResponseEntity<Map> response = restTemplate.postForEntity(orderCreateEndpoint, request, Map.class);
 
-        String redirectUri = ((Map<String, String>) response.getBody().get("redirectUri")).get("redirectUri");
-
-        return redirectUri;
+        if (response.getStatusCode() == HttpStatus.CREATED || response.getStatusCode() == HttpStatus.OK) {
+            String redirectUri = (String) response.getBody().get("redirectUri");
+            return redirectUri;
+        } else {
+            throw new RuntimeException("Błąd podczas tworzenia zamówienia: " + response.getBody());
+        }
     }
 
 
