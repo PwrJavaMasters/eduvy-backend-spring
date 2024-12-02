@@ -11,9 +11,13 @@ spring:
           predicates:
             - Path=/tutoring/**
         - id: chat-service
-          uri: http://chat-service:${CHAT_PORT}
+          uri: http://localhost:${CHAT_PORT} # Replace with the service name in your registry
           predicates:
-            - Path=/chat/**
+            - Path=/ws/**
+          filters:
+            - RewritePath=/ws/(?<segment>.*), /${segment}
+      default-filters:
+        - PreserveHostHeader
 
 logging:
   level:
