@@ -1,7 +1,12 @@
 package com.eduvy.tutoring.service;
 
 
+import com.eduvy.tutoring.model.Appointment;
+import org.springframework.http.ResponseEntity;
+
 public interface PaymentService {
 
-    String getPaymentUrl(String request);
+    String getPaymentUrl(Appointment appointment);
+
+    ResponseEntity<Void> savePaymentInAppointment(String paymentId);
 }

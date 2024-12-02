@@ -23,10 +23,13 @@ public class AppointmentPayment {
 
     private LocalDateTime paymentDate;
     private Double amount;
-
-    private String tutor;
-    private String student;
     private String appointment;
-
     private String status;
+
+    public AppointmentPayment(LocalDateTime paymentDate, Double amount, String appointment, String status) {
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.appointment = appointment;
+        this.status = status;
+    }
 }
