@@ -1,20 +1,29 @@
 package com.eduvy.payment.services.impl;
 
+import com.eduvy.payment.dto.GetPaymentUrlResponse;
 import com.eduvy.payment.dto.OrderRequest;
 import com.eduvy.payment.dto.PayUCreateOrderResponse;
 import com.eduvy.payment.dto.PayUWebhook;
+import com.eduvy.payment.model.AppointmentPayment;
+import com.eduvy.payment.repository.AppointmentPaymentRepository;
 import com.eduvy.payment.services.PayUService;
 import com.eduvy.payment.services.PaymentService;
 import com.google.gson.Gson;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -27,6 +36,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     PayUService payUService;
 
+    @Autowired
+    private AppointmentPaymentRepository appointmentPaymentRepository;
+
     public PaymentServiceImpl(PayUService payUService) {
         this.payUService = payUService;
     }
@@ -35,11 +47,11 @@ public class PaymentServiceImpl implements PaymentService {
     Gson gson = new Gson();
 
     @Override
-    public String createOrder(OrderRequest orderRequest) {
+    public ResponseEntity<GetPaymentUrlResponse> createOrder(OrderRequest orderRequest) {
         String accessToken = payUService.getAccessToken();
         System.out.println("Access Token: " + accessToken);
 
-        int amount = orderRequest.getTotalAmount() * 100; //konwersja do groszy
+        double amount = orderRequest.getTotalAmount() * 100; //konwersja do groszy
 
         try {
             // Prepare the HTTP POST request
@@ -49,6 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Prepare payload
             Map<String, Object> payload = new HashMap<>();
+//            payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
             payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
             payload.put("customerIp", "127.0.0.1");
             payload.put("merchantPosId", merchantPosId);
@@ -84,9 +97,9 @@ public class PaymentServiceImpl implements PaymentService {
                 }
 
                 PayUCreateOrderResponse payUResponse = gson.fromJson(responseBody, PayUCreateOrderResponse.class);
+                GetPaymentUrlResponse getPaymentUrlResponse = new GetPaymentUrlResponse(payUResponse.getRedirectUri());
 
-
-                return payUResponse.getRedirectUri();
+                return ResponseEntity.ok(getPaymentUrlResponse);
             }
 
         } catch (Exception e) {
@@ -96,21 +109,50 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public String processPaymentNotify(PayUWebhook payUWebhook) {
-        System.out.println(payUWebhook);
-        return "";
+    @Transactional
+    public ResponseEntity<Void> processPaymentNotify(PayUWebhook payUWebhook) {
+        System.out.println("PayUWebhook: " + payUWebhook);
+
+        if (!payUWebhook.getOrder().getStatus().equals("COMPLETED")) {
+            ResponseEntity.ok().build();
+        }
+
+        String meetingId = payUWebhook.getOrder().getExtOrderId();
+        boolean savePaymentInTutoringService = savePaymentInTutoringService(meetingId);
+
+        if (!savePaymentInTutoringService) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+        AppointmentPayment appointmentPayment = new AppointmentPayment(
+                LocalDateTime.now(),
+                Double.parseDouble(payUWebhook.getOrder().getTotalAmount()) / 100.00,
+                meetingId,
+                payUWebhook.getOrder().getStatus()
+        );
+
+        appointmentPaymentRepository.saveAndFlush(appointmentPayment);
+
+        return ResponseEntity.ok().build();
     }
 
+    private boolean savePaymentInTutoringService(String meetingId) {
+        String url = "http://tutoring-service:8085/internal/payment/" + meetingId;
+//        String url = "http://localhost:8085/internal/payment/" + meetingId;
 
-    public static void main(String[] args) {
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setExtOrderId("7");
-        orderRequest.setTotalAmount(10000);
+        HttpGet request = new HttpGet(url);
 
-        PayUService payUService = new PayUServiceImpl();
-        PaymentService paymentService = new PaymentServiceImpl(payUService);
-        String link = paymentService.createOrder(orderRequest);
-        System.out.printf("Link: %s\n", link);
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(request)) {
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.printf("Request url: %s | Status code: %d%n", url, statusCode);
+
+            return statusCode == 200;
+
+        } catch (IOException e) {
+            System.err.println("Error during HTTP request: " + e.getMessage());
+            return false;
+        }
     }
-
 }

@@ -1,9 +1,11 @@
 package com.eduvy.payment.controller;
 
+import com.eduvy.payment.dto.GetPaymentUrlResponse;
 import com.eduvy.payment.dto.OrderRequest;
 import com.eduvy.payment.dto.PayUWebhook;
 import com.eduvy.payment.services.PaymentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,13 +21,13 @@ public class PaymentController {
         return "Payment Service is up";
     }
 
-    @GetMapping("/get-payment-link")
-    public String makeOrder(@RequestBody OrderRequest orderRequest) {
+    @PostMapping("/get-payment-link")
+    public ResponseEntity<GetPaymentUrlResponse> makeOrder(@RequestBody OrderRequest orderRequest) {
         return paymentService.createOrder(orderRequest);
     }
 
     @PostMapping("/notify")
-    public String paymentNotify(@RequestBody PayUWebhook payUWebhook) {
+    public ResponseEntity<Void> paymentNotify(@RequestBody PayUWebhook payUWebhook) {
         return paymentService.processPaymentNotify(payUWebhook);
     }
 }

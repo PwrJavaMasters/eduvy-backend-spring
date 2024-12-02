@@ -84,7 +84,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         appointment.setMeetingUrl(meetingUrl);
 
         appointmentRepository.saveAndFlush(appointment);
-        String paymentUrl = generateOneTimePaymentLink(studentMail, appointment);
+        String paymentUrl = generateOneTimePaymentLink(appointment);
 
         return ResponseEntity.ok(new BookAppointmentResponse(paymentUrl));
     }
@@ -276,7 +276,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getDescription(),
                 tutorProfileService.getTutorFullName(appointment.getTutorProfile()),
                 appointment.getIsPaid(),
-                appointment.getIsPaid() ? null : generateOneTimePaymentLink(appointment.getStudent(), appointment)
+                appointment.getIsPaid() ? null : generateOneTimePaymentLink(appointment)
         );
     }
 
@@ -296,8 +296,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         );
     }
 
-
-    private String generateOneTimePaymentLink(String userMail, Appointment appointment) {
-        return paymentService.getPaymentUrl("todo"); //todo implement
+    private String generateOneTimePaymentLink(Appointment appointment) {
+        return paymentService.getPaymentUrl(appointment);
     }
 }

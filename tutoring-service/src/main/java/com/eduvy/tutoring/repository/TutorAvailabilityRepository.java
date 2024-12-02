@@ -15,5 +15,7 @@ public interface TutorAvailabilityRepository extends JpaRepository<TutorAvailabi
     TutorAvailability getTutorAvailabilityByTutorAndDay(String tutor, LocalDate day);
 
     @Query("SELECT ta FROM TutorAvailability ta WHERE ta.tutor = :tutor AND ta.day BETWEEN :startDate AND :endDate")
-    List<TutorAvailability> findTutorAvailabilityByMonth(@Param("tutor") String tutor, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<TutorAvailability> findTutorAvailabilityByMonth(@Param("tutor") String tutor,
+                                                         @Param("startDate") LocalDate startDate,
+                                                         @Param("endDate") LocalDate endDate);
 }

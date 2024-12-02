@@ -1,12 +1,14 @@
 package com.eduvy.payment.services;
 
 
+import com.eduvy.payment.dto.GetPaymentUrlResponse;
 import com.eduvy.payment.dto.OrderRequest;
 import com.eduvy.payment.dto.PayUWebhook;
+import org.springframework.http.ResponseEntity;
 
 public interface PaymentService {
 
-    public String createOrder(OrderRequest orderRequest);
+    public ResponseEntity<GetPaymentUrlResponse> createOrder(OrderRequest orderRequest);
 
-    String processPaymentNotify(PayUWebhook payUWebhook);
+    ResponseEntity<Void> processPaymentNotify(PayUWebhook payUWebhook);
 }

@@ -1,12 +1,10 @@
-package com.eduvy.payment.dto;
+package com.eduvy.tutoring.dto.payment;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
