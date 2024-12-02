@@ -1,10 +1,12 @@
 package com.eduvy.chat.service;
 
 import com.eduvy.chat.model.ChatRoom;
+import com.eduvy.chat.model.User;
 import com.eduvy.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -37,5 +39,9 @@ public class ChatRoomService {
         chatRoomRepository.save(senderToRecipient);
         chatRoomRepository.save(recipientToSender);
         return chatId;
+    }
+
+    public List<User> getUsersWithChatRooms(String senderId) {
+        return chatRoomRepository.findUsersWithChatRooms(senderId);
     }
 }
