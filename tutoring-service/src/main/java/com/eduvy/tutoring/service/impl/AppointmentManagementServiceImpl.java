@@ -4,6 +4,8 @@ package com.eduvy.tutoring.service.impl;
 import com.eduvy.tutoring.dto.appointment.*;
 import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
+import com.eduvy.tutoring.dto.meeting.MeetingRequest;
+import com.eduvy.tutoring.dto.meeting.MeetingResponse;
 import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorAvailability;
@@ -12,12 +14,14 @@ import com.eduvy.tutoring.model.utils.HoursBlock;
 import com.eduvy.tutoring.repository.AppointmentRepository;
 import com.eduvy.tutoring.repository.TutorAvailabilityRepository;
 import com.eduvy.tutoring.service.*;
+import com.eduvy.tutoring.utils.ServicesURL;
 import com.eduvy.tutoring.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -36,6 +40,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     PaymentService paymentService;
     UserService userService;
     AppointmentService appointmentService;
+    private final ServicesURL servicesURL;
 
     TutorAvailabilityRepository tutorAvailabilityRepository;
     AppointmentRepository appointmentRepository;
@@ -74,10 +79,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 studentMail
         );
 
-        String meetingUrl = "todo";
-//        if (meetingUrl == null) {
-//            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-//        }
+        String meetingUrl = "not confirmed";
 
         appointment.setMeetingUrl(meetingUrl);
 
@@ -141,6 +143,24 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+        MeetingRequest meetingRequest = new MeetingRequest(
+                appointment.getId(),
+                appointment.getStudent(),
+                tutorProfile.getTutorMail()
+        );
+
+        String meetingServiceUrl = "http://" + servicesURL.getMeetingServiceUrl() + "/internal/link";
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<MeetingResponse> response = restTemplate.postForEntity(
+                meetingServiceUrl,
+                meetingRequest,
+                MeetingResponse.class
+        );
+
+        String meetingUrl = response.getBody().getLink();
+
+        appointment.setMeetingUrl(meetingUrl);
         appointment.setIsConfirmed(true);
         appointmentRepository.save(appointment);
 
@@ -252,7 +272,7 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getSubject(),
                 appointment.getPrice(),
                 appointment.getIsConfirmed(),
-                "https://meet.google.com/",
+                appointment.getMeetingUrl(),
                 appointment.getDescription(),
                 tutorProfileService.getTutorFullName(appointment.getTutorProfile()),
                 appointment.getIsPaid(),
