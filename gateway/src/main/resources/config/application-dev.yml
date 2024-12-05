@@ -23,3 +23,9 @@ logging:
   level:
     root: DEBUG
     io.netty: DEBUG
+    org:
+      springframework:
+        security: DEBUG
+        web:
+          socket: DEBUG
+        messaging: DEBUG

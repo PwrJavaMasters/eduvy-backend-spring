@@ -11,5 +11,7 @@ logging:
   level:
     org:
       springframework:
-        security=DEBUG:
-        websocket=DEBUG:
+        security: DEBUG
+        web:
+          socket: DEBUG
+        messaging: DEBUG
