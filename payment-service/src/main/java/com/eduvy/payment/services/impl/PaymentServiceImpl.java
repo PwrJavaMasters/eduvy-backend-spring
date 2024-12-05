@@ -8,6 +8,7 @@ import com.eduvy.payment.model.AppointmentPayment;
 import com.eduvy.payment.repository.AppointmentPaymentRepository;
 import com.eduvy.payment.services.PayUService;
 import com.eduvy.payment.services.PaymentService;
+import com.eduvy.payment.utils.ServicesURL;
 import com.google.gson.Gson;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -30,7 +31,6 @@ import java.util.*;
 public class PaymentServiceImpl implements PaymentService {
 
     private String merchantPosId = "486591";
-
     private String orderCreateEndpoint = "https://secure.snd.payu.com/api/v2_1/orders";
 
     @Autowired
@@ -38,6 +38,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private AppointmentPaymentRepository appointmentPaymentRepository;
+
+    @Autowired
+    ServicesURL servicesURL;
 
     public PaymentServiceImpl(PayUService payUService) {
         this.payUService = payUService;
@@ -137,8 +140,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private boolean savePaymentInTutoringService(String meetingId) {
-        String url = "http://tutoring-service:8085/internal/payment/" + meetingId;
-//        String url = "http://localhost:8085/internal/payment/" + meetingId;
+        String url = "http://" + servicesURL.getTutoringServiceUrl() + "/internal/payment/" + meetingId;
 
         HttpGet request = new HttpGet(url);
 

@@ -8,5 +8,5 @@ public interface PaymentService {
 
     String getPaymentUrl(Appointment appointment);
 
-    ResponseEntity<Void> savePaymentInAppointment(String paymentId);
+    ResponseEntity<Void> savePayment(String appointmentId);
 }

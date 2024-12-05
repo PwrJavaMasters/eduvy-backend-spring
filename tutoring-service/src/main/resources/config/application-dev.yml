@@ -14,5 +14,8 @@ user-service:
 meeting-service:
   url: meeting-service
 
+payment-service:
+  url: payment-service
+
 application:
   url: eduvy.pl

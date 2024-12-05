@@ -5,7 +5,6 @@ import com.eduvy.tutoring.service.PaymentService;
 import com.eduvy.tutoring.service.TutorProfileManagementService;
 import com.eduvy.tutoring.utils.ServicesURL;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +24,8 @@ public class InternalController {
         return tutorProfileManagementService.editUserUpdate(editUserUpdate);
     }
 
-    @GetMapping("/payment/{paymentId}")
-    public ResponseEntity<Void> savePayment(@PathVariable("paymentId") String paymentId) {
-        return paymentService.savePaymentInAppointment(paymentId);
+    @GetMapping("/payment/{appointmentId}")
+    public ResponseEntity<Void> savePayment(@PathVariable("appointmentId") String appointmentId) {
+        return paymentService.savePayment(appointmentId);
     }
 }

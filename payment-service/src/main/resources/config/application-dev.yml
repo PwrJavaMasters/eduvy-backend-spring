@@ -7,3 +7,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+user-service:
+  url: user-service
+
+meeting-service:
+  url: meeting-service
+
+tutoring-service:
+  url: tutoring-service
+
+application:
+  url: eduvy.pl

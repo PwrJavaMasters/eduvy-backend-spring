@@ -20,6 +20,9 @@ auth0:
 user-service:
   url: localhost:8083
 
+payment-service:
+  url: localhost:8087
+
 meeting-service:
   url: localhost:8088
 

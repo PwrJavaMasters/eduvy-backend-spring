@@ -1,4 +1,4 @@
-package com.eduvy.tutoring.utils;
+package com.eduvy.payment.utils;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +14,8 @@ public class ServicesURL {
     @Value("${meeting-service.url}")
     private String meetingServiceUrl;
 
-    @Value("${payment-service.url}")
-    private String paymentServiceUrl;
+    @Value("${tutoring-service.url}")
+    private String tutoringServiceUrl;
 
     @Value("${application.url}")
     private String applicationUrl;
