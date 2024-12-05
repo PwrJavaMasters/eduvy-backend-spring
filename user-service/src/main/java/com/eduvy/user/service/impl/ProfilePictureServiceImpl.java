@@ -4,8 +4,10 @@ package com.eduvy.user.service.impl;
 import com.eduvy.user.model.ProfilePicture;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.ProfilePictureRepository;
+import com.eduvy.user.repository.UserDetailsRepository;
 import com.eduvy.user.service.ProfilePictureService;
 import com.eduvy.user.service.UserService;
+import com.eduvy.user.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.Base64;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +27,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
     UserService userService;
 
     ProfilePictureRepository profilePictureRepository;
+    UserDetailsRepository userDetailsRepository;
 
 
     @Override
@@ -61,6 +65,28 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
     @Transactional
     public ResponseEntity<byte[]> getProfilePicture() {
         UserDetails userDetails = userService.getUserFromContext();
+        if(userDetails == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ProfilePicture profilePicture = profilePictureRepository.findByUserDetails(userDetails);
+        if (profilePicture == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String fileType = "image/jpeg";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"profile-picture.jpg\"")
+                .contentType(MediaType.parseMediaType(fileType))
+                .body(profilePicture.getImageData());
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<byte[]> getProfilePicture(String hash) {
+        String mail = Utils.decodeUserMail(hash);
+        UserDetails userDetails = userDetailsRepository.findByEmail(mail);
         if(userDetails == null) {
             return ResponseEntity.notFound().build();
         }

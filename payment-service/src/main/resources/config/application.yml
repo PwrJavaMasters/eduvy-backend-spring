@@ -16,10 +16,3 @@ server:
 auth0:
   audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
   issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
-
-payu:
-  pos_id: 486296
-  client_id: 486296
-  client_secret: 65e5cb6243fb33120fe29efd1e805896
-  oauth_endpoint: https://secure.snd.payu.com/pl/standard/user/oauth/authorize
-  order_create_endpoint: https://secure.snd.payu.com/api/v2_1/orders

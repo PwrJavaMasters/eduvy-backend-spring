@@ -50,6 +50,11 @@ public class JwtAuthFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+        if (path.startsWith("/users/profile-picture/")) {
+            return chain.filter(exchange);
+        }
+
         String token = getJwtFromRequest(exchange);
 
         if (token != null && validateToken(token)) {

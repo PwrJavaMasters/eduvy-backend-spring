@@ -1,5 +1,6 @@
 package com.eduvy.tutoring.utils;
 
+import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorProfile;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,6 +28,15 @@ public class Utils {
     }
 
     private static Hashids hashids = new Hashids("eduvy", 7);// do not change salt
+
+    public static String encodeUserMail(String mail) {
+        return Base64.getEncoder().encodeToString(mail.getBytes());
+    }
+
+    // Decode a Base64 encoded email
+    public static String decodeUserMail(String mail) {
+        return new String(Base64.getDecoder().decode(mail));
+    }
 
     public static String encodeTutorProfileId(TutorProfile tutorProfile) {
         return "EDUVY-TUTOR_" + hashids.encode(tutorProfile.getId());

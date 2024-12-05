@@ -14,4 +14,6 @@ public class ServicesURL {
     @Value("${meeting-service.url}")
     private String meetingServiceUrl;
 
+    @Value("${application.url}")
+    private String applicationUrl;
 }

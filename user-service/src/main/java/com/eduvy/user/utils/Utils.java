@@ -28,6 +28,16 @@ public class Utils {
 
     private static Hashids hashids = new Hashids("eduvy", 7);// do not change salt
 
+
+    public static String encodeUserMail(UserDetails user) {
+        return Base64.getEncoder().encodeToString(user.getEmail().getBytes());
+    }
+
+    // Decode a Base64 encoded email
+    public static String decodeUserMail(String mail) {
+        return new String(Base64.getDecoder().decode(mail));
+    }
+
     public static String encodeUserId(UserDetails user) {
         return "EDUVY-USER_" + hashids.encode(user.getId());
     }

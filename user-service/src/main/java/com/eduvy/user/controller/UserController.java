@@ -57,4 +57,9 @@ public class UserController {
     public ResponseEntity<byte[]> editUserDetails() {
         return profilePictureService.getProfilePicture();
     }
+
+    @GetMapping("/profile-picture/{hash}")
+    public ResponseEntity<byte[]> editUserDetails(@PathVariable("hash") String hash) {
+        return profilePictureService.getProfilePicture(hash);
+    }
 }

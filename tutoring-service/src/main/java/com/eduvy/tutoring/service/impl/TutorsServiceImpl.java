@@ -8,6 +8,7 @@ import com.eduvy.tutoring.repository.TutorProfileRepository;
 import com.eduvy.tutoring.repository.TutorProfileReviewRepository;
 import com.eduvy.tutoring.service.TutorProfileService;
 import com.eduvy.tutoring.service.TutorsService;
+import com.eduvy.tutoring.utils.ServicesURL;
 import com.eduvy.tutoring.utils.Utils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import static com.eduvy.tutoring.utils.SecurityContextHolderUtils.getCurrentUser
 @Service
 @AllArgsConstructor
 public class TutorsServiceImpl implements TutorsService {
+
+    ServicesURL servicesURL;
 
     TutorProfileService tutorProfileService;
 
@@ -101,7 +104,8 @@ public class TutorsServiceImpl implements TutorsService {
                 tutorProfileService.getTutorProfileAvgRating(tutorProfile),
                 tutorProfile.getAllSubjects(),
                 tutorProfile.getDescription(),
-                Utils.encodeTutorProfileId(tutorProfile)
+                Utils.encodeTutorProfileId(tutorProfile),
+                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail())
         );
     }
 

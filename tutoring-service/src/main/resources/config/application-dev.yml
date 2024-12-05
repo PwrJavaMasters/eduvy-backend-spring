@@ -13,3 +13,6 @@ user-service:
 
 meeting-service:
   url: meeting-service
+
+application:
+  url: eduvy.pl

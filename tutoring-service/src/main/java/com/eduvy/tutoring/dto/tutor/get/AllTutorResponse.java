@@ -23,4 +23,5 @@ public class AllTutorResponse {
     List<String> subjects;
     String description;
     String tutorId;
+    String imageUrl;
 }

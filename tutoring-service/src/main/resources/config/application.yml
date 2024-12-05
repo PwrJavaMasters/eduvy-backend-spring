@@ -23,6 +23,9 @@ user-service:
 meeting-service:
   url: localhost:8088
 
+application:
+    url: localhost:8081
+
 
 
 
