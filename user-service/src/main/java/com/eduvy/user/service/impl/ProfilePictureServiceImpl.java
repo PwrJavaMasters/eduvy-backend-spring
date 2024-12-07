@@ -10,15 +10,17 @@ import com.eduvy.user.service.UserService;
 import com.eduvy.user.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Base64;
 
 @Service
 @AllArgsConstructor
@@ -93,7 +95,16 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
 
         ProfilePicture profilePicture = profilePictureRepository.findByUserDetails(userDetails);
         if (profilePicture == null) {
-            return ResponseEntity.notFound().build();
+            try {
+                byte[] defaultAvatar = loadDefaultAvatar();
+
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"default-avatar.jpg\"")
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(defaultAvatar);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         }
 
         String fileType = "image/jpeg";
@@ -102,5 +113,12 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"profile-picture.jpg\"")
                 .contentType(MediaType.parseMediaType(fileType))
                 .body(profilePicture.getImageData());
+    }
+
+    private byte[] loadDefaultAvatar() throws IOException {
+        ClassPathResource resource = new ClassPathResource("default_avatar.jpg");
+        try (InputStream in = resource.getInputStream()) {
+            return in.readAllBytes();
+        }
     }
 }

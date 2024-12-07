@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/payment")
-public class PaymentController {
+@RequestMapping("/internal")
+public class InternalController {
 
     PaymentService paymentService;
 
-    @PostMapping("/notify")
-    public ResponseEntity<Void> paymentNotify(@RequestBody PayUWebhook payUWebhook) {
-        return paymentService.processPaymentNotify(payUWebhook);
+
+    @PostMapping("/get-payment-link")
+    public ResponseEntity<GetPaymentUrlResponse> makeOrder(@RequestBody OrderRequest orderRequest) {
+        return paymentService.createOrder(orderRequest);
     }
 }
+

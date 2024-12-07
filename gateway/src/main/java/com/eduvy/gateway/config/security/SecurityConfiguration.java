@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/swagger/**").permitAll()
                         .pathMatchers("/users/profile-picture/**").permitAll()
+                        .pathMatchers("/payment/**").permitAll()
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyExchange().authenticated()
                 )

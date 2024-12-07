@@ -29,6 +29,10 @@ public class Appointment {
     private Boolean isCanceled;
     private Boolean isFinished;
     private String meetingUrl; //default null, set after meeting is confirmed
+
+    @Column(columnDefinition = "TEXT")
+    private String paymentUrl;
+
     private String description;
 
 
@@ -51,5 +55,23 @@ public class Appointment {
         this.isConfirmed = false;
         this.isCanceled = false;
         this.isFinished = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", day=" + day +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", subject='" + subject + '\'' +
+                ", isPaid=" + isPaid +
+                ", isConfirmed=" + isConfirmed +
+                ", meetingUrl='" + meetingUrl + '\'' +
+                ", paymentUrl='" + paymentUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", tutorProfile=" + tutorProfile +
+                ", student='" + student + '\'' +
+                '}';
     }
 }

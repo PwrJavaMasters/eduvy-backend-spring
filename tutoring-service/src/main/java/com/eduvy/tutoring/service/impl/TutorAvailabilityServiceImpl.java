@@ -53,7 +53,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
         if (availabilityBlockRequest == null || isBlockNotValid(availabilityBlockRequest))
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 
-        TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByDay(availabilityBlockRequest.getDay());
+        TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(userMail , availabilityBlockRequest.getDay());
         if (tutorAvailability == null)
             tutorAvailability = new TutorAvailability(availabilityBlockRequest.getDay(), userMail);
 
@@ -91,6 +91,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> addAvailabilityBlockList(List<AvailabilityBlockRequest> availabilityBlockRequestList) {
         String userMail = getCurrentUserMailFromContext();
         if (userMail == null) {
@@ -106,10 +107,11 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
 
-            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByDay(availabilityBlockRequest.getDay());
+            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(userMail , availabilityBlockRequest.getDay());
             if (tutorAvailability == null) {
                 tutorAvailability = new TutorAvailability(availabilityBlockRequest.getDay(), userMail);
             }
+            System.out.println("availability:" + tutorAvailability);
 
             Timestamp newStartTime = availabilityBlockRequest.getStartTime();
             Timestamp newEndTime = availabilityBlockRequest.getEndTime();
@@ -127,6 +129,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
             }
 
             newHoursBlockList.add(new HoursBlock(newStartTime, newEndTime));
+            System.out.println(newHoursBlockList);
             tutorAvailability.setHoursBlockList(newHoursBlockList);
 
             tutorAvailabilityRepository.saveAndFlush(tutorAvailability);

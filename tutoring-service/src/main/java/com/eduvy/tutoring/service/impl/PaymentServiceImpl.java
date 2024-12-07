@@ -46,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
         );
         String jsonPayload = gson.toJson(orderRequest);
 
-        String url = "http://" + servicesURL.getPaymentServiceUrl() + "/internal/get-payment-link/" + appointment;
+        String url = "http://" + servicesURL.getPaymentServiceUrl() + "/internal/get-payment-link";
 
         HttpPost request = new HttpPost(url);
         request.addHeader("Content-Type", "application/json");

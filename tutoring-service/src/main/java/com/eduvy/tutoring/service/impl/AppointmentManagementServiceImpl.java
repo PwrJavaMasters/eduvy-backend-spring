@@ -6,7 +6,6 @@ import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
 import com.eduvy.tutoring.dto.meeting.MeetingRequest;
 import com.eduvy.tutoring.dto.meeting.MeetingResponse;
-import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorAvailability;
 import com.eduvy.tutoring.model.TutorProfile;
@@ -25,8 +24,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,13 +77,11 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         );
 
         String meetingUrl = "not confirmed";
-
         appointment.setMeetingUrl(meetingUrl);
 
         appointmentRepository.saveAndFlush(appointment);
-        String paymentUrl = generateOneTimePaymentLink(appointment);
 
-        return ResponseEntity.ok(new BookAppointmentResponse(paymentUrl));
+        return ResponseEntity.ok().build();
     }
 
     private boolean validateAppointment(BookAppointmentRequest request, TutorProfile tutorProfile) {
@@ -159,10 +154,13 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
         );
 
         String meetingUrl = response.getBody().getLink();
+        String paymentUrl = generatePaymentLink(appointment);
 
         appointment.setMeetingUrl(meetingUrl);
         appointment.setIsConfirmed(true);
+        appointment.setPaymentUrl(paymentUrl);
         appointmentRepository.save(appointment);
+        System.out.println("Appointment accepted:" + appointment);
 
         return ResponseEntity.ok().build();
     }
@@ -272,11 +270,11 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getSubject(),
                 appointment.getPrice(),
                 appointment.getIsConfirmed(),
-                appointment.getMeetingUrl(),
+                appointment.getIsConfirmed() ? appointment.getMeetingUrl() : null,
                 appointment.getDescription(),
                 tutorProfileService.getTutorFullName(appointment.getTutorProfile()),
                 appointment.getIsPaid(),
-                appointment.getIsPaid() ? null : generateOneTimePaymentLink(appointment)
+                appointment.getIsPaid() ? null : appointment.getPaymentUrl()
         );
     }
 
@@ -289,14 +287,14 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getSubject(),
                 appointment.getPrice(),
                 appointment.getIsConfirmed(),
-                appointment.getMeetingUrl(),
+                appointment.getIsConfirmed() ? appointment.getMeetingUrl() : null,
                 appointment.getDescription(),
                 appointment.getStudent(), //todo think what to return here - was first name + last name
                 appointment.getIsPaid()
         );
     }
 
-    private String generateOneTimePaymentLink(Appointment appointment) {
+    private String generatePaymentLink(Appointment appointment) {
         return paymentService.getPaymentUrl(appointment);
     }
 }

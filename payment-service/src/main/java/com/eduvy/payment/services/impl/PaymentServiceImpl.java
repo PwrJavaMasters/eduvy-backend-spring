@@ -54,7 +54,7 @@ public class PaymentServiceImpl implements PaymentService {
         String accessToken = payUService.getAccessToken();
         System.out.println("Access Token: " + accessToken);
 
-        double amount = orderRequest.getTotalAmount() * 100; //konwersja do groszy
+        int amount = (int) (orderRequest.getTotalAmount() * 100); //konwersja do groszy
 
         try {
             // Prepare the HTTP POST request
