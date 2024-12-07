@@ -13,7 +13,7 @@ spring:
         - id: payment-service
           uri: http://payment-service:${PAYMENT_PORT}
           predicates:
-            - Path=/tutoring/**
+            - Path=/payment/**
         - id: chat-service
           uri: http://localhost:${CHAT_PORT} # Replace with the service name in your registry
           predicates:
