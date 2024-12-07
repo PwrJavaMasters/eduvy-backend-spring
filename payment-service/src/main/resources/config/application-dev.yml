@@ -9,13 +9,13 @@ spring:
     show-sql: true
 
 user-service:
-  url: user-service
+  url: user-service:8083
 
 meeting-service:
-  url: meeting-service
+  url: meeting-service:8088
 
 tutoring-service:
-  url: tutoring-service
+  url: tutoring-service:8085
 
 application:
   url: eduvy.pl
