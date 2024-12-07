@@ -10,11 +10,13 @@ services:
       - user-service
       - tutoring-service
       - chat-service
+      - payment-service
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
       - USER_PORT=${USER_PORT}
       - TUTORING_PORT=${TUTORING_PORT}
       - CHAT_PORT=${CHAT_PORT}
+      - PAYMENT_PORT=${PAYMENT_PORT}
     networks:
       - app-network
 
