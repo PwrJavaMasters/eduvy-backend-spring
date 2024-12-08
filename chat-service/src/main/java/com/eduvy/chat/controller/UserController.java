@@ -11,6 +11,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,14 +39,14 @@ public class UserController {
     }
 
     @GetMapping("/getUsers")
-    public ResponseEntity<List<User>> getAllUser(@Payload User user) {
-        System.out.println(user);
-        return new ResponseEntity<>(userService.getConnectedUser(user), HttpStatus.OK);
+    public ResponseEntity<List<User>> getAllUser(@RequestParam("email") String email) {
+        System.out.println(email);
+        return new ResponseEntity<>(userService.getConnectedUser(email), HttpStatus.OK);
     }
 
     @GetMapping("/with-chat-rooms") //todo chat
-    public ResponseEntity<List<User>> getUsersWithChatRooms(@Payload User user) {
-        List<User> usersWithChatRooms = chatRoomService.getUsersWithChatRooms(user.getEmail());
+    public ResponseEntity<List<User>> getUsersWithChatRooms(@RequestParam("email") String email) {
+        List<User> usersWithChatRooms = chatRoomService.getUsersWithChatRooms(email);
         return ResponseEntity.ok(usersWithChatRooms);
     }
 

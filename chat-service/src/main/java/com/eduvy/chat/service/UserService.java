@@ -38,10 +38,10 @@ public class UserService {
         }
     }
 
-    public List<User> getConnectedUser(User user) {
+    public List<User> getConnectedUser(String email) {
         return userRepository.findAllByStatus(UserStatus.ONLINE)
                 .stream()
-                .filter(u -> !user.getEmail().equals(u.getEmail()))
+                .filter(u -> !email.equals(u.getEmail()))
                 .toList();
     }
 
