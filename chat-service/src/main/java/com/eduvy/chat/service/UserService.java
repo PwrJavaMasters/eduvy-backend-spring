@@ -13,34 +13,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     @Autowired
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
-    public void saveUser(User user)
-    {
-        try
-        {
-            user.setStatus(UserStatus.ONLINE);
-            repository.save(user);
-        }
-        catch (Exception ex)
-        {
+    public void saveUser(User user) {
+        try {
+            User existingUser = userRepository.findByEmail(user.getEmail());
+            if (existingUser != null) {
+                existingUser.setStatus(UserStatus.ONLINE);
+                userRepository.save(existingUser);
+            } else {
+                user.setStatus(UserStatus.ONLINE);
+                userRepository.save(user);
+            }
+        } catch (Exception ex) {
             System.out.println(ex);
         }
-
     }
 
-    public void disconnectUser(User user)
-    {
-        User onlineUser = repository.findById(user.getNickName()).orElse(null);
-        if(onlineUser != null)
-        {
+    public void disconnectUser(User user) {
+        User onlineUser = userRepository.findByEmail(user.getEmail());
+        if (onlineUser != null) {
             user.setStatus(UserStatus.OFFLINE);
-            repository.save(user);
+            userRepository.save(user);
         }
     }
 
-    public List<User> getConnectedUser()
-    {
-        return repository.findAllByStatus(UserStatus.ONLINE);
+    public List<User> getConnectedUser(User user) {
+        return userRepository.findAllByStatus(UserStatus.ONLINE)
+                .stream()
+                .filter(u -> !user.getEmail().equals(u.getEmail()))
+                .toList();
     }
+
 }

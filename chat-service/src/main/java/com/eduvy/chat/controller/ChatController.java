@@ -24,12 +24,11 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final SimpMessagingTemplate messagingTemplate;
     private final Logger logger = LoggerFactory.getLogger(ChatController.class);
+
     @GetMapping("/chat/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>> getChatMessage(
-            @PathVariable("senderId") String senderId,
-            @PathVariable("recipientId") String recipientId)
-    {
-        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId,recipientId));
+    public ResponseEntity<List<ChatMessage>> getChatMessage(@PathVariable("senderId") String senderId,
+                                                            @PathVariable("recipientId") String recipientId) {
+        return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
     @MessageMapping("/chat")

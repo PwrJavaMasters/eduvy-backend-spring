@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
+
     Optional<ChatRoom> findBySenderIdAndRecipientId(String senderId, String recipientId);
+
+//    ChatRoom findBySenderIdAndRecipientId(String senderId, String recipientId);
 
     @Query("SELECT DISTINCT u FROM User u " +
             "WHERE u.nickName IN (" +
