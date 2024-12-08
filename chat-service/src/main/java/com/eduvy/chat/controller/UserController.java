@@ -25,14 +25,14 @@ public class UserController {
     private final UserService userService;
 
     @MessageMapping("/user.addUser")
-    @SendTo("/user/topic") //todo
+    @SendTo("/user/topic/public") //todo
     public User addUser(@Payload User user) {
         userService.saveUser(user);
         return user;
     }
 
     @MessageMapping("/user.disconnectUser")
-    @SendTo("/user/topic") //todo chat (problem)
+    @SendTo("/user/topic/public") //todo chat (problem)
     public User disconnectUser(@Payload User user) {
         userService.disconnectUser(user);
         return user;

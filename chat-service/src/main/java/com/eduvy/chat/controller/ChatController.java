@@ -33,16 +33,35 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
-        logger.info("Received ChatMessage: {}", chatMessage);
+        logger.info("Received ChatMessage: Sender={}, Recipient={}, Message={}",
+                chatMessage.getSenderId(),
+                chatMessage.getRecipientId(),
+                chatMessage.getMessage());
+
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
-        messagingTemplate.convertAndSendToUser(
-                chatMessage.getRecipientId(), "/queue/messages",
-                new ChatNotification(
-                        savedMsg.getId(),
-                        savedMsg.getSenderId(),
-                        savedMsg.getRecipientId(),
-                        savedMsg.getMessage()
-                )
+        logger.info("Saved ChatMessage: ChatId={}, Sender={}, Recipient={}, Message={}",
+                savedMsg.getChatId(),
+                savedMsg.getSenderId(),
+                savedMsg.getRecipientId(),
+                savedMsg.getMessage());
+
+        ChatNotification notification = new ChatNotification(
+                savedMsg.getId(),
+                savedMsg.getSenderId(),
+                savedMsg.getRecipientId(),
+                savedMsg.getMessage()
         );
+        logger.info("Prepared ChatNotification: Id={}, Sender={}, Recipient={}, Message={}",
+                notification.getId(),
+                notification.getSenderId(),
+                notification.getRecipientId(),
+                notification.getMessage());
+
+        // Send the notification and log the event
+        messagingTemplate.convertAndSendToUser(
+                chatMessage.getRecipientId(), "/queue/messages", notification);
+
+        logger.info("Sent ChatNotification to User: RecipientId={}, Destination={}",
+                chatMessage.getRecipientId(), "/queue/messages");
     }
 }
