@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @MessageMapping("/user.addUser")
-    @SendTo("/user/topic")
+    @SendTo("/user/topic") //todo
     public User addUser(@Payload User user)
     {
         userService.saveUser(user);
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @MessageMapping("/user.disconnectUser")
-    @SendTo("/user/topic")
+    @SendTo("/user/topic") //todo chat (problem)
     public User disconnectUser(@Payload User user)
     {
         userService.disconnectUser(user);
@@ -42,10 +42,9 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUser()
     {
         return new ResponseEntity<>(userService.getConnectedUser(), HttpStatus.OK);
-
     }
 
-    @GetMapping("/with-chat-rooms")
+    @GetMapping("/with-chat-rooms") //todo chat
     public ResponseEntity<List<User>> getUsersWithChatRooms(User user) {
         List<User> usersWithChatRooms = chatRoomService.getUsersWithChatRooms(user.getNickName());
         return ResponseEntity.ok(usersWithChatRooms);
