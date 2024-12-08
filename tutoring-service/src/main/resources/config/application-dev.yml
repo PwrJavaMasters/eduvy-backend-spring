@@ -18,4 +18,4 @@ payment-service:
   url: payment-service:8087
 
 application:
-  url: eduvy.pl
+  url: eduvy.pl/api
