@@ -17,7 +17,7 @@ spring:
         - id: chat-service
           uri: http://localhost:${CHAT_PORT} # Replace with the service name in your registry
           predicates:
-            - Path=/ws/**
+            - Path=/ws/**,/chat/**
           filters:
             - RewritePath=/ws/(?<segment>.*), /${segment}
       default-filters:

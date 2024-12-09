@@ -17,7 +17,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
 //    ChatRoom findBySenderIdAndRecipientId(String senderId, String recipientId);
 
     @Query("SELECT DISTINCT u FROM User u " +
-            "WHERE u.nickName IN (" +
+            "WHERE u.email IN (" +
             "SELECT cr.senderId FROM ChatRoom cr WHERE cr.recipientId = :senderId " +
             "UNION " +
             "SELECT cr.recipientId FROM ChatRoom cr WHERE cr.senderId = :senderId)")

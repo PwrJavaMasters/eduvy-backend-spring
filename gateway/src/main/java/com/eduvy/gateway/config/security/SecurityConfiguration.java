@@ -30,6 +30,8 @@ public class SecurityConfiguration {
                         .pathMatchers("/swagger/**").permitAll()
                         .pathMatchers("/users/profile-picture/**").permitAll()
                         .pathMatchers("/payment/**").permitAll()
+                        .pathMatchers("/ws/**").permitAll()
+                        .pathMatchers("/chat/**").permitAll()
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyExchange().authenticated()
                 )
