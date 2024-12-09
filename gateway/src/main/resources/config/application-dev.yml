@@ -15,7 +15,7 @@ spring:
           predicates:
             - Path=/payment/**
         - id: chat-service
-          uri: http://localhost:${CHAT_PORT} # Replace with the service name in your registry
+          uri: http://chat-service:${CHAT_PORT}
           predicates:
             - Path=/ws/**,/chat/**
           filters:
