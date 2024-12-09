@@ -33,8 +33,8 @@ public class UserService {
     public void disconnectUser(User user) {
         User onlineUser = userRepository.findByEmail(user.getEmail());
         if (onlineUser != null) {
-            user.setStatus(UserStatus.OFFLINE);
-            userRepository.save(user);
+            onlineUser.setStatus(UserStatus.OFFLINE);
+            userRepository.save(onlineUser);
         }
     }
 
