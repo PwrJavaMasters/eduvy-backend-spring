@@ -21,4 +21,5 @@ public class GetTutorProfileResponse {
     private Double minPrice;
     private Double maxPrice;
     private Double rating;
+    private String imageUrl;
 }

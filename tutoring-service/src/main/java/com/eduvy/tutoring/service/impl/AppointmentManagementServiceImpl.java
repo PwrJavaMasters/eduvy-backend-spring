@@ -274,8 +274,8 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getDescription(),
                 tutorProfileService.getTutorFullName(appointment.getTutorProfile()),
                 appointment.getIsPaid(),
-                appointment.getIsPaid() ? null : appointment.getPaymentUrl()
-        );
+                appointment.getIsPaid() ? null : appointment.getPaymentUrl(),
+                appointment.getTutorProfile().getTutorMail());
     }
 
     private TutorAppointmentResponse mapAppointmentToTutorAppointmentResponse(Appointment appointment) {

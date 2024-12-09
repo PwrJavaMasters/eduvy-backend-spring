@@ -27,4 +27,5 @@ public class UserAppointmentResponse {
     private String tutor;
     private Boolean isPaid;
     private String paymentUrl;
+    private String tutorMail;
 }

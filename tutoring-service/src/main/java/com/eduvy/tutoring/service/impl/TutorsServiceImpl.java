@@ -186,7 +186,8 @@ public class TutorsServiceImpl implements TutorsService {
                 tutorProfile.getDescription(),
                 findTutorLessonMinPrice(tutorProfile),
                 findTutorLessonMaxPrice(tutorProfile),
-                tutorProfileService.getTutorProfileAvgRating(tutorProfile)
+                tutorProfileService.getTutorProfileAvgRating(tutorProfile),
+                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail())
         );
 
         return ResponseEntity.ok(getTutorProfileResponse);
