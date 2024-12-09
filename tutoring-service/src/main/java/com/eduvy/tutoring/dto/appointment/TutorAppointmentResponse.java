@@ -25,6 +25,7 @@ public class TutorAppointmentResponse {
     private String description;
     private String student;
     private Boolean isPaid;
+    private String studentName;
 }
 
 

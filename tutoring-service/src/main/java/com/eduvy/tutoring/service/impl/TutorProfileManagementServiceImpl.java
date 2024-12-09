@@ -33,7 +33,8 @@ public class TutorProfileManagementServiceImpl implements TutorProfileManagement
     @Override
     @Transactional
     public ResponseEntity<TutorProfileManagementResponse> createTutorProfile(CreateTutorProfileRequest createTutorProfileRequest) {
-        UserDetails tutor = userService.getUserDetails();
+        String userMail = getCurrentUserMailFromContext();
+        UserDetails tutor = userService.getUserDetails(userMail);
         if (tutor == null) {
             System.out.println("Failed to find user.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

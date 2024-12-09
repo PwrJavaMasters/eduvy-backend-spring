@@ -6,6 +6,7 @@ import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityRequest;
 import com.eduvy.tutoring.dto.meeting.MeetingRequest;
 import com.eduvy.tutoring.dto.meeting.MeetingResponse;
+import com.eduvy.tutoring.dto.user.UserDetails;
 import com.eduvy.tutoring.model.Appointment;
 import com.eduvy.tutoring.model.TutorAvailability;
 import com.eduvy.tutoring.model.TutorProfile;
@@ -279,6 +280,9 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
     private TutorAppointmentResponse mapAppointmentToTutorAppointmentResponse(Appointment appointment) {
+        UserDetails userDetails = userService.getUserDetails(appointment.getStudent());
+        String studentName = userDetails != null ? userDetails.getFirstName() + " " + userDetails.getLastName() : null;
+
         return new TutorAppointmentResponse(
                 Utils.encodeAppointmentId(appointment),
                 appointment.getDay(),
@@ -290,7 +294,8 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getIsConfirmed() ? appointment.getMeetingUrl() : null,
                 appointment.getDescription(),
                 appointment.getStudent(), //todo think what to return here - was first name + last name
-                appointment.getIsPaid()
+                appointment.getIsPaid(),
+                studentName
         );
     }
 

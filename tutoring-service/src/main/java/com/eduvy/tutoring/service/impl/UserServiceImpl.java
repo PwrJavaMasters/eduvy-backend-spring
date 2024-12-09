@@ -32,9 +32,7 @@ public class UserServiceImpl implements UserService {
             .create();
 
     @Override
-    public UserDetails getUserDetails() {
-        String userMail = getCurrentUserMailFromContext();
-
+    public UserDetails getUserDetails(String userMail) {
         String url = "http://" + servicesURL.getUserServiceUrl() + "/internal/user-details/" + userMail;
 
         HttpGet request = new HttpGet(url);
