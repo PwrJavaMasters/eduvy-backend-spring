@@ -1,14 +1,17 @@
 package com.eduvy.user.service.impl;
 
+import com.eduvy.user.dto.chat.CreateChatUserRequest;
 import com.eduvy.user.dto.tutor.profile.EditUserUpdateRequest;
 import com.eduvy.user.dto.user.details.EditUserDetailsRequest;
 import com.eduvy.user.dto.user.details.UserDetailsCheckResponse;
 import com.eduvy.user.model.UserDetails;
 import com.eduvy.user.repository.UserDetailsRepository;
 import com.eduvy.user.service.UserService;
+import com.eduvy.user.utils.ServicesURL;
 import com.google.gson.Gson;
 import jakarta.transaction.Transactional;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -37,7 +40,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
+    @Autowired
+    ServicesURL servicesURL;
+
     private final Gson gson = new Gson();
+    private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
     @Override
     public UserDetails getUserFromContext() {
@@ -134,8 +141,29 @@ public class UserServiceImpl implements UserService {
 
         userData.setUserDetails(fillUserDetailsRequest);
         userDetailsRepository.save(userData);
+        createChatUser(userData);
 
         return ResponseEntity.ok().build();
+    }
+
+    private void createChatUser(UserDetails userData) {
+        CreateChatUserRequest request = new CreateChatUserRequest(userData.getEmail(), userData.getFirstName() + " " + userData.getLastName());
+        String payload = gson.toJson(request);
+
+        String url = "http://" + servicesURL.getChatServiceUrl() + "/internal/add-user";
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setEntity(new StringEntity(payload, StandardCharsets.UTF_8));
+
+        System.out.println("Sending request to: " + url);
+
+        try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            System.out.println("Create new user in chat service. Status: " + statusCode);
+
+        } catch (Exception e) {
+            System.out.println("Failed to create new user in chat service. Message: " + e.getMessage());
+        }
     }
 
     @Override

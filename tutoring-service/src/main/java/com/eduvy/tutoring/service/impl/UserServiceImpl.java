@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         HttpGet request = new HttpGet(url);
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             int statusCode = response.getStatusLine().getStatusCode();
-            System.out.printf("Request url: " + url + " | status code: " + statusCode );
+            System.out.println("Request url: " + url + " | status code: " + statusCode);
 
             if (statusCode != 200) {
                 return null;

@@ -38,9 +38,12 @@ public class TutorsServiceImpl implements TutorsService {
         List<TutorProfile> tutorProfiles = tutorProfileRepository.findAll();
         removeOwnTutorProfileFromResponse(tutorProfiles);
 
-        List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
+        List<AllTutorResponse> responses = tutorProfiles.stream()
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, null))
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(tutorListingResponses);
+
+        return ResponseEntity.ok(responses);
     }
 
     @Override
@@ -49,9 +52,11 @@ public class TutorsServiceImpl implements TutorsService {
         Double minPrice = getTutorsFilteredRequest.getMinPrice();
         Double maxPrice = getTutorsFilteredRequest.getMaxPrice();
 
-        Subject subject = null;
+        Subject subject;
         if (subjectString != null && !subjectString.isBlank()) {
             subject = Subject.fromString(subjectString.toUpperCase());
+        } else {
+            subject = null;
         }
 
         if (minPrice != null && minPrice == 0) {
@@ -64,9 +69,11 @@ public class TutorsServiceImpl implements TutorsService {
         List<TutorProfile> tutorProfiles = tutorProfileRepository.findFilteredTutors(subject, minPrice, maxPrice);
         removeOwnTutorProfileFromResponse(tutorProfiles);
 
-        List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
+        List<AllTutorResponse> responses = tutorProfiles.stream()
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, subject))
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(tutorListingResponses);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
@@ -78,8 +85,9 @@ public class TutorsServiceImpl implements TutorsService {
         }
 
         List<AllTutorResponse> responses = tutorProfiles.stream()
-                .map(this::mapTutorProfileToAllTutorResponse)
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, null))
                 .collect(Collectors.toList());
+        removeOwnTutorProfileFromResponse(tutorProfiles);
 
         return ResponseEntity.ok(responses);
     }
@@ -94,7 +102,12 @@ public class TutorsServiceImpl implements TutorsService {
     }
 
 
-    private AllTutorResponse mapTutorProfileToAllTutorResponse(TutorProfile tutorProfile) {
+    private AllTutorResponse mapTutorProfileToAllTutorResponse(TutorProfile tutorProfile, Subject subject) {
+        Double price = null;
+        if (subject != null) {
+            price = tutorProfile.getPriceBySubject(subject);
+        }
+
         return new AllTutorResponse(
                 tutorProfile.getFirstName(),
                 tutorProfile.getLastName(),
@@ -105,7 +118,8 @@ public class TutorsServiceImpl implements TutorsService {
                 tutorProfile.getAllSubjects(),
                 tutorProfile.getDescription(),
                 Utils.encodeTutorProfileId(tutorProfile),
-                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail())
+                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail()),
+                subject != null ? price : null
         );
     }
 
