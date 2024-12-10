@@ -28,7 +28,6 @@
             <groupId>com.auth0</groupId>
             <artifactId>jwks-rsa</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>auth0</artifactId>
@@ -67,7 +66,10 @@
             <artifactId>gson</artifactId>
             <version>2.11.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

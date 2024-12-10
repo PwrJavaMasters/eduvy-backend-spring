@@ -1,5 +1,6 @@
 package com.eduvy.gateway.config.security;
 
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,7 @@ public class SecurityConfiguration {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/swagger/**").permitAll()
+                        .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .pathMatchers("/users/profile-picture/**").permitAll()
                         .pathMatchers("/payment/**").permitAll()
                         .pathMatchers("/ws/**").permitAll()
@@ -44,7 +45,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://88.198.122.46:4200", "http://88.198.122.46:4202", "http://localhost:4202","https://eduvy.pl"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://88.198.122.46:4200", "http://88.198.122.46:4202", "http://localhost:4202","https://eduvy.pl", "/swagger-ui/**", "/v3/api-docs/**"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
@@ -54,3 +55,4 @@ public class SecurityConfiguration {
         return source;
     }
 }
+
