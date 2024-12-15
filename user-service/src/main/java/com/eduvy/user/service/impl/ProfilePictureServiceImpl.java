@@ -80,6 +80,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"profile-picture.jpg\"")
+                .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, must-revalidate")
                 .contentType(MediaType.parseMediaType(fileType))
                 .body(profilePicture.getImageData());
     }
@@ -100,6 +101,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
 
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"default-avatar.jpg\"")
+                        .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, must-revalidate")
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(defaultAvatar);
             } catch (IOException e) {
@@ -111,6 +113,7 @@ public class ProfilePictureServiceImpl implements ProfilePictureService {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"profile-picture.jpg\"")
+                .header(HttpHeaders.CACHE_CONTROL, "max-age=86400, must-revalidate")
                 .contentType(MediaType.parseMediaType(fileType))
                 .body(profilePicture.getImageData());
     }
