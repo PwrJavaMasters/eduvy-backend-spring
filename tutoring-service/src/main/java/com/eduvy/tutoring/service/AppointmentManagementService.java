@@ -17,6 +17,8 @@ public interface AppointmentManagementService {
 
     ResponseEntity<Void> confirmAppointment(String appointmentId);
 
+    ResponseEntity<Void> cancelAppointment(String appointmentId);
+
     ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByDay(GetAvailabilityRequest getAvailabilityRequest);
 
     ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByMonth(GetAvailabilityRequest getAvailabilityRequest);

@@ -20,7 +20,6 @@ public class StudentAppointmentController {
 
     AppointmentManagementService appointmentService;
 
-
     @PostMapping("/get-appointments")
 //    @SecurityRequirement(name = "bearerAuth")
 //    @PreAuthorize("hasAuthority('TEACHER') or hasAuthority('STUDENT')")

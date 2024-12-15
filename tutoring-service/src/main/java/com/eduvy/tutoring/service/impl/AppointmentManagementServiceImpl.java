@@ -167,6 +167,29 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
     @Override
+    @Transactional
+    public ResponseEntity<Void> cancelAppointment(String appointmentId) {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (appointmentId == null) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+
+        Appointment appointment = appointmentService.getAppointmentByEncodedId(appointmentId);
+        if (appointment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        appointmentRepository.delete(appointment);
+        System.out.println("Appointment canceled:" + appointment);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<List<UserAppointmentResponse>> getUserAppointmentsByDay(GetAvailabilityRequest getAvailabilityRequest) {
         String student = getCurrentUserMailFromContext();
         if (student == null)

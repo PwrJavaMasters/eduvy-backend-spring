@@ -98,4 +98,10 @@ public class TutorProfileController {
         System.out.println(meetingId);
         return appointmentManagementService.confirmAppointment(meetingId);
     }
+
+    @GetMapping("/cancel-appointment/{meetingId}")
+    public ResponseEntity<Void> cancelAppointment(@PathVariable("meetingId") String meetingId) {
+        System.out.println(meetingId);
+        return appointmentManagementService.cancelAppointment(meetingId);
+    }
 }
