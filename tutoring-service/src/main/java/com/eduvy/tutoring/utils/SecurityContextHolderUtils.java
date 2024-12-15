@@ -24,6 +24,7 @@ public class SecurityContextHolderUtils {
 
     public static String getCurrentUserMailFromContext(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) return null;
 
         UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
 

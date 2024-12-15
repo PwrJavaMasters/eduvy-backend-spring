@@ -1,5 +1,6 @@
 package com.eduvy.tutoring.model;
 
+import com.eduvy.tutoring.model.utils.Subject;
 import com.eduvy.tutoring.model.utils.SubjectData;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,6 +42,14 @@ public class TutorProfile {
     public Double getPriceBySubject(String subject) {
         return subjects.stream()
                 .filter(subjectData -> subjectData.getSubject().name().equalsIgnoreCase(subject))
+                .findFirst()
+                .map(SubjectData::getPrice)
+                .orElse(0.0); //todo check if it is okay to send 0
+    }
+
+    public Double getPriceBySubject(Subject subject) {
+        return subjects.stream()
+                .filter(subjectData -> subjectData.getSubject().name().equalsIgnoreCase(subject.name()))
                 .findFirst()
                 .map(SubjectData::getPrice)
                 .orElse(0.0); //todo check if it is okay to send 0

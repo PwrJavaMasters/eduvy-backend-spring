@@ -16,3 +16,6 @@ server:
 auth0:
   audience: Bh6vvSbQlWvOGziA6cuKqpZdWIsU3LBt
   issuer: https://dev-gknidk2q1foe4txe.us.auth0.com/
+
+chat-service:
+  url: localhost:8086

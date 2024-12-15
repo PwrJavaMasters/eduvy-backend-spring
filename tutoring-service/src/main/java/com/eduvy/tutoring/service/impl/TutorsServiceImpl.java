@@ -1,9 +1,11 @@
 package com.eduvy.tutoring.service.impl;
 
+import com.eduvy.tutoring.dto.tutor.TutorHomePageResponse;
 import com.eduvy.tutoring.dto.tutor.get.*;
 import com.eduvy.tutoring.model.TutorProfile;
 import com.eduvy.tutoring.model.utils.Subject;
 import com.eduvy.tutoring.model.utils.SubjectData;
+import com.eduvy.tutoring.repository.AppointmentRepository;
 import com.eduvy.tutoring.repository.TutorProfileRepository;
 import com.eduvy.tutoring.repository.TutorProfileReviewRepository;
 import com.eduvy.tutoring.service.TutorProfileService;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +35,19 @@ public class TutorsServiceImpl implements TutorsService {
 
     TutorProfileRepository tutorProfileRepository;
     TutorProfileReviewRepository tutorProfileReviewRepository;
+    AppointmentRepository appointmentRepository;
 
     @Override
     public ResponseEntity<List<AllTutorResponse>> getAllTutors() {
         List<TutorProfile> tutorProfiles = tutorProfileRepository.findAll();
         removeOwnTutorProfileFromResponse(tutorProfiles);
 
-        List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
+        List<AllTutorResponse> responses = tutorProfiles.stream()
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, null))
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(tutorListingResponses);
+
+        return ResponseEntity.ok(responses);
     }
 
     @Override
@@ -49,9 +56,11 @@ public class TutorsServiceImpl implements TutorsService {
         Double minPrice = getTutorsFilteredRequest.getMinPrice();
         Double maxPrice = getTutorsFilteredRequest.getMaxPrice();
 
-        Subject subject = null;
+        Subject subject;
         if (subjectString != null && !subjectString.isBlank()) {
             subject = Subject.fromString(subjectString.toUpperCase());
+        } else {
+            subject = null;
         }
 
         if (minPrice != null && minPrice == 0) {
@@ -64,9 +73,11 @@ public class TutorsServiceImpl implements TutorsService {
         List<TutorProfile> tutorProfiles = tutorProfileRepository.findFilteredTutors(subject, minPrice, maxPrice);
         removeOwnTutorProfileFromResponse(tutorProfiles);
 
-        List<AllTutorResponse> tutorListingResponses = tutorProfiles.stream().map(this::mapTutorProfileToAllTutorResponse).toList();
+        List<AllTutorResponse> responses = tutorProfiles.stream()
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, subject))
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(tutorListingResponses);
+        return ResponseEntity.ok(responses);
     }
 
     @Override
@@ -78,8 +89,9 @@ public class TutorsServiceImpl implements TutorsService {
         }
 
         List<AllTutorResponse> responses = tutorProfiles.stream()
-                .map(this::mapTutorProfileToAllTutorResponse)
+                .map(tutorProfile -> mapTutorProfileToAllTutorResponse(tutorProfile, null))
                 .collect(Collectors.toList());
+        removeOwnTutorProfileFromResponse(tutorProfiles);
 
         return ResponseEntity.ok(responses);
     }
@@ -94,7 +106,12 @@ public class TutorsServiceImpl implements TutorsService {
     }
 
 
-    private AllTutorResponse mapTutorProfileToAllTutorResponse(TutorProfile tutorProfile) {
+    private AllTutorResponse mapTutorProfileToAllTutorResponse(TutorProfile tutorProfile, Subject subject) {
+        Double price = null;
+        if (subject != null) {
+            price = tutorProfile.getPriceBySubject(subject);
+        }
+
         return new AllTutorResponse(
                 tutorProfile.getFirstName(),
                 tutorProfile.getLastName(),
@@ -105,7 +122,8 @@ public class TutorsServiceImpl implements TutorsService {
                 tutorProfile.getAllSubjects(),
                 tutorProfile.getDescription(),
                 Utils.encodeTutorProfileId(tutorProfile),
-                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail())
+                "http://" + servicesURL.getApplicationUrl() + "/users/profile-picture/" + Utils.encodeUserMail(tutorProfile.getTutorMail()),
+                subject != null ? price : null
         );
     }
 
@@ -192,5 +210,32 @@ public class TutorsServiceImpl implements TutorsService {
         );
 
         return ResponseEntity.ok(getTutorProfileResponse);
+    }
+
+    @Override
+    public ResponseEntity<TutorHomePageResponse> getTutorHomePageResponse() {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // Fetch data
+        int lessonsScheduled = appointmentRepository.countLessonsScheduledForTutorInCurrentMonth(tutorProfile, startOfMonth, endOfMonth);
+        int lessonsCompleted = appointmentRepository.countCompletedLessonsForTutor(tutorProfile);
+        double moneyAmount = appointmentRepository.calculateMoneyEarnedForTutor(tutorProfile);
+
+        // Create response
+        TutorHomePageResponse tutorHomePageResponse = new TutorHomePageResponse(lessonsScheduled, lessonsCompleted, moneyAmount);
+
+        return ResponseEntity.ok(tutorHomePageResponse);
     }
 }

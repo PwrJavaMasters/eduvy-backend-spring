@@ -24,4 +24,5 @@ public class AllTutorResponse {
     String description;
     String tutorId;
     String imageUrl;
+    Double subjectPrice;
 }

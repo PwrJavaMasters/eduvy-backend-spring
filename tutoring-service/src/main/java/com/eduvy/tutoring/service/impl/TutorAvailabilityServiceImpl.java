@@ -107,7 +107,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
 
-            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(userMail , availabilityBlockRequest.getDay());
+            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(userMail, availabilityBlockRequest.getDay());
             if (tutorAvailability == null) {
                 tutorAvailability = new TutorAvailability(availabilityBlockRequest.getDay(), userMail);
             }
@@ -155,7 +155,7 @@ public class TutorAvailabilityServiceImpl implements TutorAvailabilityService {
                 return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
             }
 
-            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByDay(availabilityBlockRequest.getDay());
+            TutorAvailability tutorAvailability = tutorAvailabilityRepository.getTutorAvailabilityByTutorAndDay(userMail, availabilityBlockRequest.getDay());
 
             if (tutorAvailability == null) {
                 // No availability exists for this day; nothing to delete

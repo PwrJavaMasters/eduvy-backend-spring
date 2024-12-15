@@ -1,9 +1,12 @@
 package com.eduvy.chat.service;
 
+import com.eduvy.chat.config.security.JwtAuthFilter;
 import com.eduvy.chat.model.User;
 import com.eduvy.chat.repository.UserRepository;
 import com.eduvy.chat.model.UserStatus;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,29 @@ public class UserService {
     @Autowired
     private final UserRepository userRepository;
 
-    public void saveUser(User user) {
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    public boolean saveUser(User user) {
+        try {
+            User existingUser = userRepository.findByEmail(user.getEmail());
+            if (existingUser != null) {
+                existingUser.setStatus(UserStatus.OFFLINE);
+                userRepository.save(existingUser);
+                logger.info("Created new user: " + user.getEmail());
+            } else {
+                user.setStatus(UserStatus.OFFLINE);
+                userRepository.save(user);
+            }
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+
+            return false;
+        }
+    }
+
+    public void connectUser(User user) {
         try {
             User existingUser = userRepository.findByEmail(user.getEmail());
             if (existingUser != null) {

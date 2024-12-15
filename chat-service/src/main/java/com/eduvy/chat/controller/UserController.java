@@ -24,7 +24,7 @@ public class UserController {
     @MessageMapping("/user.addUser")
     @SendTo("/user/topic/public") //todo
     public User addUser(@Payload User user) {
-        userService.saveUser(user);
+        userService.connectUser(user);
         return user;
     }
 

@@ -29,4 +29,29 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAppointmentsByTutorProfileAndMonth(@Param("tutorProfile") TutorProfile tutorProfile,
                                                              @Param("startOfMonth") LocalDate startOfMonth,
                                                              @Param("endOfMonth") LocalDate endOfMonth);
+
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.student = :student AND a.day BETWEEN :startOfMonth AND :endOfMonth")
+    int countLessonsScheduledInCurrentMonth(@Param("student") String student,
+                                            @Param("startOfMonth") LocalDate startOfMonth,
+                                            @Param("endOfMonth") LocalDate endOfMonth);
+
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.student = :student AND a.isFinished = true")
+    int countLessonsCompleted(@Param("student") String student);
+
+    @Query("SELECT COUNT(DISTINCT a.subject) FROM Appointment a WHERE a.student = :student")
+    int countDistinctSubjects(@Param("student") String student);
+
+    // Count lessons scheduled for this month
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.tutorProfile = :tutorProfile AND a.day BETWEEN :startOfMonth AND :endOfMonth")
+    int countLessonsScheduledForTutorInCurrentMonth(@Param("tutorProfile") TutorProfile tutorProfile,
+                                                    @Param("startOfMonth") LocalDate startOfMonth,
+                                                    @Param("endOfMonth") LocalDate endOfMonth);
+
+    // Count completed lessons for a tutor
+    @Query("SELECT COUNT(a) FROM Appointment a WHERE a.tutorProfile = :tutorProfile AND a.isFinished = true")
+    int countCompletedLessonsForTutor(@Param("tutorProfile") TutorProfile tutorProfile);
+
+    // Calculate total money earned from completed lessons
+    @Query("SELECT COALESCE(SUM(a.price), 0) FROM Appointment a WHERE a.tutorProfile = :tutorProfile AND a.isFinished = true")
+    double calculateMoneyEarnedForTutor(@Param("tutorProfile") TutorProfile tutorProfile);
 }
