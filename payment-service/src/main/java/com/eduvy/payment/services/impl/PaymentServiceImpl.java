@@ -64,8 +64,8 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Prepare payload
             Map<String, Object> payload = new HashMap<>();
-//            payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
             payload.put("notifyUrl", "https://eduvy.pl/api/payment/notify");
+            payload.put("continueUrl", "https://eduvy.pl/payment-success");
             payload.put("customerIp", "127.0.0.1");
             payload.put("merchantPosId", merchantPosId);
             payload.put("description", "Payment for tutoring.");
