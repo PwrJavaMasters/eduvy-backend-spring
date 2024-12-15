@@ -5,6 +5,8 @@ import com.eduvy.tutoring.dto.appointment.BookAppointmentRequest;
 import com.eduvy.tutoring.dto.appointment.BookAppointmentResponse;
 import com.eduvy.tutoring.dto.availibility.DayRequest;
 import com.eduvy.tutoring.dto.availibility.GetAvailabilityResponse;
+import com.eduvy.tutoring.dto.student.StudentHomePageResponse;
+import com.eduvy.tutoring.dto.tutor.TutorHomePageResponse;
 import com.eduvy.tutoring.dto.tutor.get.*;
 import com.eduvy.tutoring.service.AppointmentManagementService;
 import com.eduvy.tutoring.service.TutorAvailabilityService;
@@ -78,5 +80,10 @@ public class TutorController {
     public ResponseEntity<GetAvailabilityResponse> getTutorAvailability(@PathVariable("tutorId") String tutorId,
                                                                         @RequestBody DayRequest getAvailabilityRequest) {
         return tutorAvailabilityService.getDayAvailabilityByTutorId(tutorId, getAvailabilityRequest);
+    }
+
+    @GetMapping("/home-page")
+    public ResponseEntity<TutorHomePageResponse> getTutorHomePageResponse() {
+        return tutorsService.getTutorHomePageResponse();
     }
 }

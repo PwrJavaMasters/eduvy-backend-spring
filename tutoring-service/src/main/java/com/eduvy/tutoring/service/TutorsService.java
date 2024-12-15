@@ -1,5 +1,6 @@
 package com.eduvy.tutoring.service;
 
+import com.eduvy.tutoring.dto.tutor.TutorHomePageResponse;
 import com.eduvy.tutoring.dto.tutor.get.*;
 import org.springframework.http.ResponseEntity;
 
@@ -18,4 +19,6 @@ public interface TutorsService {
     ResponseEntity<List<TutorBySubjectResponse>> getTutorsBySubjects(String subject);
 
     ResponseEntity<GetTutorProfileResponse> getTutorById(String subject);
+
+    ResponseEntity<TutorHomePageResponse> getTutorHomePageResponse();
 }

@@ -1,9 +1,11 @@
 package com.eduvy.tutoring.service.impl;
 
+import com.eduvy.tutoring.dto.tutor.TutorHomePageResponse;
 import com.eduvy.tutoring.dto.tutor.get.*;
 import com.eduvy.tutoring.model.TutorProfile;
 import com.eduvy.tutoring.model.utils.Subject;
 import com.eduvy.tutoring.model.utils.SubjectData;
+import com.eduvy.tutoring.repository.AppointmentRepository;
 import com.eduvy.tutoring.repository.TutorProfileRepository;
 import com.eduvy.tutoring.repository.TutorProfileReviewRepository;
 import com.eduvy.tutoring.service.TutorProfileService;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +35,7 @@ public class TutorsServiceImpl implements TutorsService {
 
     TutorProfileRepository tutorProfileRepository;
     TutorProfileReviewRepository tutorProfileReviewRepository;
+    AppointmentRepository appointmentRepository;
 
     @Override
     public ResponseEntity<List<AllTutorResponse>> getAllTutors() {
@@ -206,5 +210,32 @@ public class TutorsServiceImpl implements TutorsService {
         );
 
         return ResponseEntity.ok(getTutorProfileResponse);
+    }
+
+    @Override
+    public ResponseEntity<TutorHomePageResponse> getTutorHomePageResponse() {
+        String userMail = getCurrentUserMailFromContext();
+        if (userMail == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        TutorProfile tutorProfile = tutorProfileService.getTutorProfileByTutorMail(userMail);
+        if (tutorProfile == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        // Fetch data
+        int lessonsScheduled = appointmentRepository.countLessonsScheduledForTutorInCurrentMonth(tutorProfile, startOfMonth, endOfMonth);
+        int lessonsCompleted = appointmentRepository.countCompletedLessonsForTutor(tutorProfile);
+        double moneyAmount = appointmentRepository.calculateMoneyEarnedForTutor(tutorProfile);
+
+        // Create response
+        TutorHomePageResponse tutorHomePageResponse = new TutorHomePageResponse(lessonsScheduled, lessonsCompleted, moneyAmount);
+
+        return ResponseEntity.ok(tutorHomePageResponse);
     }
 }
