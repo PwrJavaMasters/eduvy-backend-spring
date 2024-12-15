@@ -26,6 +26,7 @@ public class TutorAppointmentResponse {
     private String student;
     private Boolean isPaid;
     private String studentName;
+    private boolean isFinished;
 }
 
 

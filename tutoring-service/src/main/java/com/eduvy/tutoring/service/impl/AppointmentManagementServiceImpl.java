@@ -286,6 +286,8 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
     }
 
     private UserAppointmentResponse mapAppointmentToUserAppointmentResponse(Appointment appointment) {
+        boolean isFinished = appointment.getEndDate().before(new Timestamp(System.currentTimeMillis()));
+
         return new UserAppointmentResponse(
                 Utils.encodeAppointmentId(appointment),
                 appointment.getDay(),
@@ -299,12 +301,15 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 tutorProfileService.getTutorFullName(appointment.getTutorProfile()),
                 appointment.getIsPaid(),
                 appointment.getIsPaid() ? null : appointment.getPaymentUrl(),
-                appointment.getTutorProfile().getTutorMail());
+                appointment.getTutorProfile().getTutorMail(),
+                isFinished
+        );
     }
 
     private TutorAppointmentResponse mapAppointmentToTutorAppointmentResponse(Appointment appointment) {
         UserDetails userDetails = userService.getUserDetails(appointment.getStudent());
         String studentName = userDetails != null ? userDetails.getFirstName() + " " + userDetails.getLastName() : null;
+        boolean isFinished = appointment.getEndDate().before(new Timestamp(System.currentTimeMillis()));
 
         return new TutorAppointmentResponse(
                 Utils.encodeAppointmentId(appointment),
@@ -318,7 +323,8 @@ public class AppointmentManagementServiceImpl implements AppointmentManagementSe
                 appointment.getDescription(),
                 appointment.getStudent(), //todo think what to return here - was first name + last name
                 appointment.getIsPaid(),
-                studentName
+                studentName,
+                isFinished
         );
     }
 
